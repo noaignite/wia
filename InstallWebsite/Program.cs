@@ -140,9 +140,9 @@ namespace InstallWebsite {
             // * Add new website in iis, path to web project
             // * New app pool with .net 4.0, with credentials
             // * Build site
-            // Remove readlock on episerver framework
+            // * Remove readlock on episerver framework
+            // * Ping website url
             // Copy a license file to web project
-            // Open website url
 
             // note: handle case when projectUrl = "localhost".
         }

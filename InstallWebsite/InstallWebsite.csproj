@@ -72,6 +72,7 @@
     <Compile Include="Resolver\ContextResolver.cs" />
     <Compile Include="Tasks\BuildTask.cs" />
     <Compile Include="Tasks\EpiFrameworkUpdateTask.cs" />
+    <Compile Include="Tasks\PingSiteTask.cs" />
     <Compile Include="Utility\ConsoleEx.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Program.cs" />
