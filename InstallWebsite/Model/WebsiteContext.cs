@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Principal;
 using CommandLine;
@@ -5,6 +6,10 @@ using CommandLine.Text;
 
 namespace InstallWebsite.Model {
     public class WebsiteContext {
+        public WebsiteContext() {
+            SkipTasks = new string[] {};
+        }
+
         [Option('d', "directory", HelpText = "Root project directory where solution file exists.")]
         public string CurrentDirectory { get; set; }
 
@@ -23,7 +28,7 @@ namespace InstallWebsite.Model {
         [Option('e', "epiversion", HelpText = "EPiServer version, to know what license file is needed.")]
         public int EpiserverVersion { get; set; }
 
-        [Option("poolmode", HelpText = "If app pool should run in Integrated (default) or Classic.", DefaultValue = AppPoolMode.Integrated)]
+        [Option("poolmode", HelpText = "If app pool should run in Integrated or Classic.", DefaultValue = AppPoolMode.Integrated)]
         public AppPoolMode AppPoolMode { get; set; }
 
         [Option("enable32bit", HelpText = "If app pool should set Enable 32 bit Applications.", DefaultValue = false)]
@@ -32,17 +37,15 @@ namespace InstallWebsite.Model {
         [Option("skipHosts", HelpText = "Skip adding HOSTS entry.", DefaultValue = false)]
         public bool SkipHosts { get; set; }
 
+        [OptionArray("skipTasks", HelpText = "List of tasks to skip running (space separated).")]
+        public string[] SkipTasks { get; set; }
+
         [Option('f', "force", HelpText = "Do not prompt to confirm configuration.", DefaultValue = false)]
         public bool Force { get; set; }
 
         public bool ExitAtNextCheck { get; set; }
-
-        [HelpOption]
-        public string GetUsage() {
-            return HelpText.AutoBuild(this, current => HelpText.DefaultParsingErrorsHandler(this, current));
-        }
-
-        public string GetProjectDirectory() {
+        
+        public string GetWebProjectDirectory() {
             return Path.Combine(CurrentDirectory, WebProjectName);
         }
 

@@ -13,7 +13,7 @@ using CommandLine.Text;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nansen")]
 [assembly: AssemblyProduct("Install Website")]
-[assembly: AssemblyCopyright("Copyright © Nansen 2012")]
+[assembly: AssemblyCopyright("Copyright © Nansen 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -11,6 +11,7 @@ using System.Threading;
 using System.Xml.Linq;
 using CommandLine;
 using InstallWebsite.Model;
+using InstallWebsite.Properties;
 using InstallWebsite.Resolver;
 using InstallWebsite.Utility;
 
@@ -19,19 +20,37 @@ namespace InstallWebsite {
         private static void Main(string[] args) {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
 
-            var context = new WebsiteContext();
-            var requestedHelp = !Parser.Default.ParseArguments(args, context);
+            string invokedVerb = null;
+            object invokedVerbOptions = null;
+            
+            var options = new Options();
+            var requestedHelp = !Parser.Default.ParseArguments(args, options, (verb, subOptions) =>
+            {
+                invokedVerb = verb;
+                invokedVerbOptions = subOptions;
+            });
 
             if (requestedHelp) {
                 return;
             }
-            
+
+            switch (invokedVerb) {
+                case "install":
+                    InitiateInstallTask((WebsiteContext)invokedVerbOptions);
+                    break;
+                case "identity":
+                    InitiateIdentityTask((AppPoolIdentityOptions)invokedVerbOptions);
+                    break;
+            }
+        }
+        
+        private static void InitiateInstallTask(WebsiteContext context) {
             ContextResolver.ResolveContextDetails(context);
 
             if (context.ExitAtNextCheck)
                 return;
 
-            Console.WriteLine("\nConfiguration:\n");
+            Console.WriteLine("\nConfiguration:");
             DisplayContext(context);
 
             if (context.Force) {
@@ -47,13 +66,43 @@ namespace InstallWebsite {
             }
         }
 
+        private static void InitiateIdentityTask(AppPoolIdentityOptions options) {
+            if (options.Reset) {
+                Settings.Default.IdentityUsername = null;
+                Settings.Default.IdentityPassword = null;
+                Settings.Default.Save();
+
+                Logger.Success("Reseted the AppPool Identity settings.");
+            } else if (options.SuppliedLoginDetails) {
+                if (!string.IsNullOrEmpty(options.Username)) {
+                    Settings.Default.IdentityUsername = options.Username;
+                }
+            
+                if (!string.IsNullOrEmpty(options.Password)) {
+                    Settings.Default.IdentityPassword = options.Password;
+                }
+                Settings.Default.Save();
+                Logger.Success("Saved AppPool Identity settings.");
+            }
+            else {
+                Logger.Log("Stored details:");
+                
+                Logger.Log("Username: " + Settings.Default.IdentityUsername);
+                Logger.Log("Password: " + Settings.Default.IdentityPassword);
+            }
+        }
+
         private static void DisplayContext(WebsiteContext context) {
-            string[] ignoreProps = {"ExitAtNextCheck"};
+            Logger.TabIndention = 1;
+
+            string[] ignoreProps = { "CurrentDirectory", "ExitAtNextCheck", "AppPoolIdentityVerb", "Force", "SkipHosts", "SkipTasks" };
             foreach (var prop in context.GetType().GetProperties()) {
                 if (!ignoreProps.Contains(prop.Name)) {
-                    Console.WriteLine("{0} = {1}", prop.Name, prop.GetValue(context, null));
+                    Logger.Log("{0} = {1}", prop.Name, prop.GetValue(context, null));
                 }
             }
+            
+            Logger.TabIndention = 0;
         }
 
         private static void ProcessTasks(WebsiteContext context) {
@@ -62,7 +111,12 @@ namespace InstallWebsite {
             var tasks = GetTasksInAssembly();
 
             foreach (var task in tasks) {
-                Console.WriteLine("Executing " + task.GetType().Name.Replace("Task", string.Empty) + " tasks...");
+                var taskName = task.GetType().Name.Replace("Task", string.Empty);
+
+                if (context.SkipTasks.Any(t => t.Equals(taskName, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                Logger.Log(taskName + ":");
 
                 Logger.TabIndention = 1;
                 task.Execute(context);
@@ -72,14 +126,20 @@ namespace InstallWebsite {
                     break;
                 }
             }
+            
+            Logger.Space();
 
-            Logger.Log("");
-            Logger.Success("Installation finished.");
+            if (context.ExitAtNextCheck) {
+                Logger.Error("Installation failed.");                                
+            }
+            else {
+                Logger.Success("Installation finished.");                
+            }
 
-            // *Add url to hosts pointing to 127.0.0.1
-            // Add new website in iis, path to web project
-            // New app pool with .net 4.0, with credentials
-            // Build site
+            // * Add url to hosts pointing to 127.0.0.1
+            // * Add new website in iis, path to web project
+            // * New app pool with .net 4.0, with credentials
+            // * Build site
             // Remove readlock on episerver framework
             // Copy a license file to web project
             // Open website url

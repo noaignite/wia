@@ -8,7 +8,7 @@ using InstallWebsite.Model;
 using InstallWebsite.Utility;
 
 namespace InstallWebsite.Tasks {
-    internal class HostsTask : ITask {
+    class HostsTask : ITask {
         private const int ADMIN_REQUEST_CANCELED_BY_USER_ERROR_CODE = 1223;
 #if DEBUG
         private const string ADD_HOSTS_ENTRY_FORMAT = @"echo. & echo {0}    {1} >> %systemdrive%\hosts.txt";
@@ -16,9 +16,7 @@ namespace InstallWebsite.Tasks {
         const string ADD_HOSTS_ENTRY_FORMAT = @"echo. & echo {0}    {1} >> %systemdrive%\windows\system32\drivers\etc\hosts";
 #endif
 
-        public IEnumerable<Type> DependsUpon() {
-            return new[] {typeof (WebserverTask)};
-        }
+        public IEnumerable<Type> DependsUpon() { return new[] {typeof (WebserverTask)}; }
 
         public void Execute(WebsiteContext context) {
             if (context.SkipHosts) {

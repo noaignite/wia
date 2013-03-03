@@ -33,5 +33,9 @@ namespace InstallWebsite.Utility {
         public static void Success(string message, params object[] arg) {
             WriteLine(message, ConsoleColor.Green, arg);
         }
+        
+        public static void Space() {
+            WriteLine("", Console.ForegroundColor);
+        }
     }
 }
