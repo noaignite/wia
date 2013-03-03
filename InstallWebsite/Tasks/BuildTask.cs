@@ -14,7 +14,7 @@ using ITask = InstallWebsite.Model.ITask;
 namespace InstallWebsite.Tasks {
     class BuildTask : ITask {
         public IEnumerable<Type> DependsUpon() {
-            return new [] { typeof(WebserverTask) };
+            return new [] { typeof(EpiFrameworkUpdateTask) };
         }
 
         public void Execute(WebsiteContext context) {

@@ -133,7 +133,7 @@ namespace InstallWebsite {
                 Logger.Error("Installation failed.");                                
             }
             else {
-                Logger.Success("Installation finished.");                
+                Logger.Success("Installation finished successfully.");                
             }
 
             // * Add url to hosts pointing to 127.0.0.1

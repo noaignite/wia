@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Text;
+using System.Xml.Linq;
 using InstallWebsite.Model;
 using InstallWebsite.Properties;
 using InstallWebsite.Utility;
@@ -63,57 +64,17 @@ namespace InstallWebsite.Tasks {
                 site.Bindings.Clear();
                 site.Bindings.Add("*:80:" + host, "http");
                 Logger.Log("Added binding for " + host);
+
                 try {
-                    //manager.CommitChanges();                    
+                    manager.CommitChanges();                    
                 }
                 catch (Exception ex) {
                     Logger.Error(ex.ToString());
                     context.ExitAtNextCheck = true;
                 }
-
-                UpdateEpiserverFrameworkFile(context, site.Id);
-                appPool.Recycle();
             }
         }
 
-        private void UpdateEpiserverFrameworkFile(WebsiteContext context, long siteId) {
-            var key = string.Format("/LM/W3SVC/{0}/ROOT:{1}", siteId, Environment.MachineName);
-            var episerverFrameworkFile = Directory.EnumerateFiles(context.GetWebProjectDirectory(), "EPiServerFramework.config", SearchOption.AllDirectories).FirstOrDefault();
-
-            if (episerverFrameworkFile == null) {
-                return;
-            }
-
-            // check if siteId already exists in file.
-
-            var fileAttributes = File.GetAttributes(episerverFrameworkFile);
-            var hadReadOnly = false;
-
-            if (IsReadOnly(fileAttributes)) {
-                fileAttributes = RemoveAttribute(fileAttributes, FileAttributes.ReadOnly);
-                File.SetAttributes(episerverFrameworkFile, fileAttributes);
-                hadReadOnly = true;
-            }
-
-            // do stuff
-
-            if (hadReadOnly) {
-                fileAttributes = SetAttribute(fileAttributes, FileAttributes.ReadOnly);
-                File.SetAttributes(episerverFrameworkFile, fileAttributes);
-            }
-        }
-
-        private bool IsReadOnly(FileAttributes fileAttributes) {
-            return (fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
-        }
-
-        private FileAttributes RemoveAttribute(FileAttributes fileAttributes, FileAttributes attributeToRemove) {
-            return fileAttributes & ~attributeToRemove;
-        }
-
-        private FileAttributes SetAttribute(FileAttributes fileAttributes, FileAttributes attributeToSet) {
-            return fileAttributes | attributeToSet;
-        }
 
         private static string GetFrameworkVersion(WebsiteContext context) {
             var frameworkVersion = context.FrameworkVersion;
