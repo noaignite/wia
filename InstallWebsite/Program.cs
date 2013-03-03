@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Security.Principal;
-using System.Text;
 using System.Threading;
-using System.Xml.Linq;
 using CommandLine;
 using InstallWebsite.Model;
 using InstallWebsite.Properties;
@@ -18,7 +12,9 @@ using InstallWebsite.Utility;
 namespace InstallWebsite {
     internal class Program {
         private static void Main(string[] args) {
+            var prevColor = Console.ForegroundColor;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
+            Console.ForegroundColor = ConsoleColor.White;
 
             string invokedVerb = null;
             object invokedVerbOptions = null;
@@ -42,6 +38,8 @@ namespace InstallWebsite {
                     InitiateIdentityTask((AppPoolIdentityOptions)invokedVerbOptions);
                     break;
             }
+
+            Console.ForegroundColor = prevColor;
         }
         
         private static void InitiateInstallTask(WebsiteContext context) {
