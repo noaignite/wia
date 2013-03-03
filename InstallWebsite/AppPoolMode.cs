@@ -1,8 +1,6 @@
-namespace InstallWebsite
-{
-	public enum AppPoolMode
-	{
-		Integrated,
-		Classic
-	}
+namespace InstallWebsite {
+    public enum AppPoolMode {
+        Integrated,
+        Classic
+    }
 }

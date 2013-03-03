@@ -1,201 +1,277 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
 using CommandLine;
+using InstallWebsite.Utility;
 
-namespace InstallWebsite
-{
-	class Program
-	{
-		static void Main(string[] args)
-		{
-			var context = new WebsiteContext();
+namespace InstallWebsite {
+    internal class Program {
+        private static void Main(string[] args) {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
 
-			CommandLineParser.Default.ParseArguments(args, context);
+            var context = new WebsiteContext();
+            var requestedHelp = !Parser.Default.ParseArguments(args, context);
 
-			SetDefaultContextValues(context);
+            if (requestedHelp) {
+                return;
+            }
 
-			if (!HasAdministratorPrivileges())
-			{
-				Console.WriteLine("Administrator permissions are needed to edit HOSTS file.");
+            SetDefaultContextValues(context);
 
-				ProcessStartInfo startInfo = new ProcessStartInfo();
-				startInfo.FileName = @"cmd";
-				startInfo.Verb = "runas";
-				startInfo.Arguments = "cmd /K \"cd \"" + context.CurrentDirectory + "\"";
+            if (context.ExitAtNextCheck)
+                return;
 
-				Process p = new Process();
-				p.StartInfo = startInfo;
-				p.Start();
-			}
+            Console.WriteLine("\nConfiguration:\n");
+            DisplayContext(context);
+
+            if (context.Force) {
+                ProcessTasks(context);
+            }
+            else {
+                Console.WriteLine("\nDo you want to continue installation with this configuration? (y/n)");
+                var response = Console.ReadLine();
+
+                if (response.Equals("y", StringComparison.InvariantCultureIgnoreCase)) {
+                    ProcessTasks(context);
+                }
+            }
+        }
+
+        private static void DisplayContext(WebsiteContext context) {
+            string[] ignoreProps = {"ExitAtNextCheck"};
+            foreach (var prop in context.GetType().GetProperties()) {
+                if (!ignoreProps.Contains(prop.Name)) {
+                    Console.WriteLine("{0} = {1}", prop.Name, prop.GetValue(context, null));
+                }
+            }
+        }
 
 
-			if (context.ExitAtNextCheck)
-				return;
+        private static void SetDefaultContextValues(WebsiteContext context) {
+            if (string.IsNullOrWhiteSpace(context.CurrentDirectory))
+                context.CurrentDirectory = Environment.CurrentDirectory;
 
-			if (!HasAdministratorPrivileges())
-				Console.WriteLine("Administrator permissions are needed to edit HOSTS file.");
+            context.WebProjectName = GetWebProjectName(context);
+            context.ProjectName = GetProjectName(context);
+            context.ProjectUrl = GetProjectUrl(context);
+            context.FrameworkVersion = GetFrameworkVersion(context);
+            context.EpiserverVersion = GetEpiserverVersion(context);
+        }
 
-			Console.WriteLine("\nConfiguration:\n");
-			DisplayContext(context);
+        private static double GetFrameworkVersion(WebsiteContext context) {
+            if (context.ExitAtNextCheck)
+                return -1;
 
-			Console.WriteLine("\nDo you want to continue installation with this configuration? (y/n)");
-			var response = Console.ReadLine();
+            if (context.FrameworkVersion > 0)
+                return context.FrameworkVersion;
 
-			if (response.Equals("y", StringComparison.InvariantCultureIgnoreCase)) {
-				ProcessTasks(context);
-			}
-		}
+            var webProjectFolderPath = Path.Combine(context.CurrentDirectory, context.WebProjectName);
+            var webProjectFilePath = Directory.EnumerateFiles(webProjectFolderPath, "*.csproj").FirstOrDefault();
 
-		private static void DisplayContext(WebsiteContext context)
-		{
-			string[] ignoreProps = { "ExitAtNextCheck" };
-			foreach (var prop in context.GetType().GetProperties())
-			{
-				if (!ignoreProps.Contains(prop.Name)) {
-					Console.WriteLine("{0} = {1}", prop.Name, prop.GetValue(context, null));
-				}
-			}
-		}
+            if (string.IsNullOrEmpty(webProjectFilePath) || !File.Exists(webProjectFilePath)) {
+                context.ExitAtNextCheck = true;
+                Console.WriteLine("The .csproj file for the \"{1}\" (web) project could not be found. Looked at: {0}",
+                                  webProjectFilePath, context.WebProjectName);
+                return -1;
+            }
 
-		private static bool HasAdministratorPrivileges()
-		{
-			WindowsIdentity id = WindowsIdentity.GetCurrent();
-			WindowsPrincipal principal = new WindowsPrincipal(id);
-			return principal.IsInRole(WindowsBuiltInRole.Administrator);
-		}
+            var doc = XDocument.Load(webProjectFilePath);
+            var targetFrameworkVersion =
+                doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "TargetFrameworkVersion");
 
-		private static void SetDefaultContextValues(WebsiteContext context)
-		{
-			if (string.IsNullOrWhiteSpace(context.CurrentDirectory))
-				context.CurrentDirectory = Environment.CurrentDirectory;
+            if (targetFrameworkVersion == null) {
+                context.ExitAtNextCheck = true;
+                Console.WriteLine("Could not find TargetFrameworkVersion in Web project.");
+                return -1;
+            }
 
-			context.WebProjectName = GetWebProjectName(context);
-			context.ProjectName = GetProjectName(context);
-			context.ProjectUrl = GetProjectUrl(context);
-		}
+            var versionString = targetFrameworkVersion.Value.Replace("v", string.Empty);
 
-		private static string GetWebProjectName(WebsiteContext context)
-		{
-			string webProjectName = context.WebProjectName;
-			if (string.IsNullOrWhiteSpace(webProjectName))
-			{
-				var webDirectories = Directory.GetDirectories(context.CurrentDirectory).Where(d => Path.GetFileName(d).Contains("Web")).ToList();
+            double version;
 
-				if (!webDirectories.Any())
-				{
-					context.ExitAtNextCheck = true;
-					Console.WriteLine("Web project could not be resolved. Please specifiy using \"--webproject Project.Web\". \n");
-					return null;
-				}
+            if (!Double.TryParse(versionString, out version)) {
+                context.ExitAtNextCheck = true;
+                Console.WriteLine("Could not parse Framework Version from {0}.", versionString);
+                return -1;
+            }
 
-				if (webDirectories.Count > 1)
-				{
-					context.ExitAtNextCheck = true;
-					Console.WriteLine("You need to specificy which web project to use: \n--webproject " + webDirectories.Aggregate((a, b) => Path.GetFileName(a) + "\n--webproject " + Path.GetFileName(b)) + "\n");
-					return null;
-				}
+            return version;
+        }
 
-				webProjectName = webDirectories.FirstOrDefault();
-			}
+        private static int GetEpiserverVersion(WebsiteContext context) {
+            if (context.ExitAtNextCheck)
+                return -1;
 
-			var projectDirectory = Path.Combine(context.CurrentDirectory, webProjectName);
+            if (context.EpiserverVersion > 0)
+                return context.EpiserverVersion;
 
-			if (!Directory.Exists(projectDirectory))
-			{
-				context.ExitAtNextCheck = true;
-				Console.WriteLine("Web project directory does not seem to exist at " + projectDirectory);
-				return null;
-			}
+            var episerverDllFilePath =
+                Directory.EnumerateFiles(context.CurrentDirectory, "EPiServer.dll", SearchOption.AllDirectories)
+                         .FirstOrDefault();
 
-			return webProjectName;
-		}
+            if (episerverDllFilePath != null) {
+                var version = FileVersionInfo.GetVersionInfo(episerverDllFilePath);
+                return version.FileMajorPart;
+            }
 
-		private static string GetProjectName(WebsiteContext context)
-		{
-			if (context.ExitAtNextCheck)
-				return null;
+            return -1;
+        }
 
-			string projectName = context.ProjectName;
-			
-			if (string.IsNullOrWhiteSpace(projectName))
-			{
-				var solutionFileName = Directory.GetFiles(context.CurrentDirectory).FirstOrDefault(x => x.EndsWith(".sln"));
-				projectName = Path.GetFileNameWithoutExtension(solutionFileName);
-			}
+        private static string GetWebProjectName(WebsiteContext context) {
+            string webProjectName = context.WebProjectName;
+            if (string.IsNullOrWhiteSpace(webProjectName)) {
+                var webDirectories =
+                    Directory.GetDirectories(context.CurrentDirectory)
+                             .Where(d => Path.GetFileName(d).Contains("Web"))
+                             .ToList();
 
-			return projectName;
-		}
+                if (!webDirectories.Any()) {
+                    context.ExitAtNextCheck = true;
+                    Console.WriteLine(
+                        "Web project could not be resolved. Please specifiy using \"--webproject Project.Web\". \n");
+                    return null;
+                }
 
-		private static string GetProjectUrl(WebsiteContext context)
-		{
-			if (context.ExitAtNextCheck)
-				return null;
-			
-			var projectUrl = context.ProjectUrl;
+                if (webDirectories.Count > 1) {
+                    context.ExitAtNextCheck = true;
+                    Console.WriteLine("You need to specificy which web project to use: \n--webproject " +
+                                      webDirectories.Select(path => Path.GetFileName(path))
+                                                    .Aggregate((a, b) => a + "\n--webproject " + b) + "\n");
+                    return null;
+                }
 
-			if (string.IsNullOrWhiteSpace(projectUrl)) {
-				var episerverConfigPath = Path.Combine(context.CurrentDirectory, context.WebProjectName, "episerver.config");
-			
-				if (!File.Exists(episerverConfigPath))
-				{
-					context.ExitAtNextCheck = true;
-					Console.WriteLine("Could not find episerver.config at " + episerverConfigPath);
-					return null;
-				}
+                webProjectName = Path.GetFileName(webDirectories.FirstOrDefault());
+            }
 
-				var doc = XDocument.Load(episerverConfigPath);
-				var siteSettings = doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "siteSettings");
+            var projectDirectory = Path.Combine(context.CurrentDirectory, webProjectName);
 
-				if (siteSettings == null) {
-					context.ExitAtNextCheck = true;
-					Console.WriteLine("Could not find episerver.config at " + episerverConfigPath);
-					return null;
-				}
-			
-				projectUrl = siteSettings.Attribute("siteUrl").Value;
-			}
-			return projectUrl;
-		}
+            if (!Directory.Exists(projectDirectory)) {
+                context.ExitAtNextCheck = true;
+                Console.WriteLine("Web project directory does not seem to exist at " + projectDirectory);
+                return null;
+            }
 
-		private static void ProcessTasks(WebsiteContext context)
-		{
-			Console.WriteLine("\nInstallation started!\n");
+            return webProjectName;
+        }
 
-			var tasks = GetTasksInAssembly();
-			
-			foreach (var task in tasks)
-			{
-				task.Execute(context);
-			}
+        private static string GetProjectName(WebsiteContext context) {
+            if (context.ExitAtNextCheck)
+                return null;
 
-			Console.WriteLine("Installation finished.");
+            string projectName = context.ProjectName;
 
-			// *Check if program config exists
-			// -Add url to hosts pointing to 127.0.0.1
-			// Add new website in iis, path to web project
-			// New app pool with .net 4.0, with credentials
-			// Build site
-			// Remove readlock on episerver framework
-			// Copy a license file to web project
-			// Open website url
-		}
+            if (string.IsNullOrWhiteSpace(projectName)) {
+                var solutionFileName =
+                    Directory.GetFiles(context.CurrentDirectory).FirstOrDefault(x => x.EndsWith(".sln"));
+                projectName = Path.GetFileNameWithoutExtension(solutionFileName);
+            }
 
-		private static IEnumerable<ITask> GetTasksInAssembly()
-		{
-			var type = typeof(ITask);
-			var tasks = AppDomain.CurrentDomain.GetAssemblies().ToList()
-				.SelectMany(s => s.GetTypes())
-				.Where(t => type.IsAssignableFrom(t) && t.IsClass)
-				.Select(Activator.CreateInstance)
-				.OfType<ITask>();
+            return projectName;
+        }
 
-			return tasks;
-		}
-	}
+        private static string GetProjectUrl(WebsiteContext context) {
+            if (context.ExitAtNextCheck)
+                return null;
+
+            var projectUrl = context.ProjectUrl;
+
+            if (!string.IsNullOrWhiteSpace(projectUrl)) {
+                if (!projectUrl.StartsWith("http://"))
+                    projectUrl = "http://" + projectUrl;
+
+                return projectUrl;
+            }
+
+            var webProjectFolderPath = Path.Combine(context.CurrentDirectory, context.WebProjectName);
+            var episerverConfigPath =
+                Directory.GetFiles(webProjectFolderPath, "episerver.config", SearchOption.AllDirectories)
+                         .FirstOrDefault();
+
+            if (!File.Exists(episerverConfigPath)) {
+                // the episerver config section might be in web.config
+                var webConfigPath = Path.Combine(webProjectFolderPath, "web.config");
+
+                if (!File.Exists(webConfigPath)) {
+                    // serious trouble if this file can not be found.
+                    context.ExitAtNextCheck = true;
+                    Console.WriteLine("The web.config file could not be found in " + webProjectFolderPath);
+                    return null;
+                }
+
+                episerverConfigPath = webConfigPath;
+            }
+
+            var doc = XDocument.Load(episerverConfigPath);
+            var siteSettings = doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "siteSettings");
+
+            if (siteSettings == null) {
+                context.ExitAtNextCheck = true;
+                Console.WriteLine(
+                    "Could not find the EPiServer configuration section in neither episerver.config or web.config.");
+                return null;
+            }
+
+            projectUrl = siteSettings.Attribute("siteUrl").Value;
+            return projectUrl;
+        }
+
+        private static void ProcessTasks(WebsiteContext context) {
+            Console.WriteLine("\nInstallation started!\n");
+
+            var tasks = GetTasksInAssembly();
+
+            foreach (var task in tasks) {
+                Console.WriteLine("Executing " + task.GetType().Name.Replace("Task", string.Empty) + " tasks...");
+
+                Logger.TabIndention = 1;
+                task.Execute(context);
+                Logger.TabIndention = 0;
+            }
+
+            Logger.Log("");
+            Logger.Success("Installation finished.");
+
+            // *Check if program config exists
+            // -Add url to hosts pointing to 127.0.0.1
+            // Add new website in iis, path to web project
+            // New app pool with .net 4.0, with credentials
+            // Build site
+            // Remove readlock on episerver framework
+            // Copy a license file to web project
+            // Open website url
+
+            // note: handle case when projectUrl = "localhost".
+        }
+
+        private static IEnumerable<ITask> GetTasksInAssembly() {
+            var type = typeof (ITask);
+            var tasks = AppDomain.CurrentDomain.GetAssemblies().ToList()
+                                 .SelectMany(s => s.GetTypes())
+                                 .Where(t => type.IsAssignableFrom(t) && t.IsClass)
+                                 .Select(Activator.CreateInstance)
+                                 .OfType<ITask>()
+                                 .ToList();
+
+            return tasks.DependencySort(task => GetDependantTasks(tasks, task));
+        }
+
+        private static IEnumerable<ITask> GetDependantTasks(IEnumerable<ITask> tasks, ITask task) {
+            var dependsUpon = task.DependsUpon();
+
+            if (dependsUpon == null) {
+                return new List<ITask>();
+            }
+
+            var dependsUponList = dependsUpon as List<Type> ?? dependsUpon.ToList();
+            return tasks.Where(t => dependsUponList.Contains(t.GetType()));
+        }
+    }
 }

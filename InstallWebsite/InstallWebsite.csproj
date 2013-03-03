@@ -39,8 +39,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandLine">
-      <HintPath>..\packages\CommandLineParser.1.9.3.19\lib\CommandLine.dll</HintPath>
+    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\..\..\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
@@ -56,11 +57,13 @@
   <ItemGroup>
     <Compile Include="AppPoolMode.cs" />
     <Compile Include="ITask.cs" />
+    <Compile Include="Utility\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\HelloWorldTask.cs" />
     <Compile Include="Tasks\HostsTask.cs" />
     <Compile Include="Tasks\WebserverTask.cs" />
+    <Compile Include="Utility\DependencySort.cs" />
     <Compile Include="WebsiteContext.cs" />
   </ItemGroup>
   <ItemGroup>
