@@ -1,3 +1,4 @@
+using System.IO;
 using System.Security.Principal;
 using CommandLine;
 using CommandLine.Text;
@@ -39,6 +40,10 @@ namespace InstallWebsite.Model {
         [HelpOption]
         public string GetUsage() {
             return HelpText.AutoBuild(this, current => HelpText.DefaultParsingErrorsHandler(this, current));
+        }
+
+        public string GetProjectDirectory() {
+            return Path.Combine(CurrentDirectory, WebProjectName);
         }
 
         public bool HasAdministratorPrivileges() {

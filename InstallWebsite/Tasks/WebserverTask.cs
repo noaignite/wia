@@ -13,9 +13,8 @@ namespace InstallWebsite.Tasks {
         }
 
         public void Execute(WebsiteContext context) {
-            return;
-
             using (ServerManager manager = new ServerManager()) {
+                //manager.Sites.Any(site => site.Applications.Any(app => app.Path == context.CurrentDirectory))
                 Site site = manager.Sites.Add(context.ProjectName, "http", context.ProjectUrl,
                                               Path.Combine(context.CurrentDirectory, context.WebProjectName));
 

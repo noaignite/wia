@@ -76,7 +76,7 @@ namespace InstallWebsite {
             Logger.Log("");
             Logger.Success("Installation finished.");
 
-            // -Add url to hosts pointing to 127.0.0.1
+            // *Add url to hosts pointing to 127.0.0.1
             // Add new website in iis, path to web project
             // New app pool with .net 4.0, with credentials
             // Build site

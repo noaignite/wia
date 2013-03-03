@@ -27,8 +27,7 @@ namespace InstallWebsite.Resolver {
             if (context.FrameworkVersion > 0)
                 return context.FrameworkVersion;
 
-            var webProjectFolderPath = Path.Combine(context.CurrentDirectory, context.WebProjectName);
-            var webProjectFilePath = Directory.EnumerateFiles(webProjectFolderPath, "*.csproj").FirstOrDefault();
+            var webProjectFilePath = Directory.EnumerateFiles(context.GetProjectDirectory(), "*.csproj").FirstOrDefault();
 
             if (string.IsNullOrEmpty(webProjectFilePath) || !File.Exists(webProjectFilePath)) {
                 context.ExitAtNextCheck = true;
@@ -100,7 +99,7 @@ namespace InstallWebsite.Resolver {
                 webProjectName = Path.GetFileName(webDirectories.FirstOrDefault());
             }
 
-            var projectDirectory = Path.Combine(context.CurrentDirectory, webProjectName);
+            var projectDirectory = context.GetProjectDirectory();
 
             if (!Directory.Exists(projectDirectory)) {
                 context.ExitAtNextCheck = true;
@@ -139,7 +138,7 @@ namespace InstallWebsite.Resolver {
                 return projectUrl;
             }
 
-            var webProjectFolderPath = Path.Combine(context.CurrentDirectory, context.WebProjectName);
+            var webProjectFolderPath = context.GetProjectDirectory();
             var episerverConfigPath = Directory.GetFiles(webProjectFolderPath, "episerver.config", SearchOption.AllDirectories)
                                                .FirstOrDefault();
 
