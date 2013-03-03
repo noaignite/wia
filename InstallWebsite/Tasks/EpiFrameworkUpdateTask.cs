@@ -43,7 +43,7 @@ namespace InstallWebsite.Tasks {
             var alreadyUpdated = automaticSiteMappingElement.Descendants().Any(element => element.Attribute("key").Value.Equals(key));
 
             if (alreadyUpdated) {
-                Logger.Warn("EPiServerFramework.config is already updated.");
+                Logger.Warn("No change needed.");
                 return;
             }
 

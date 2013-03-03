@@ -14,7 +14,7 @@ using ITask = InstallWebsite.Model.ITask;
 namespace InstallWebsite.Tasks {
     class BuildTask : ITask {
         public IEnumerable<Type> DependsUpon() {
-            return new [] { typeof(EpiFrameworkUpdateTask) };
+            return new [] { typeof(HostsTask) };
         }
 
         public void Execute(WebsiteContext context) {
@@ -57,10 +57,7 @@ namespace InstallWebsite.Tasks {
             BuildErrors.Add(buildErrorEventArgs.Message);
         }
 
-        public void Shutdown() {
-            
-        }
-
+        public void Shutdown() { }
         public LoggerVerbosity Verbosity { get; set; }
         public string Parameters { get; set; }
     }

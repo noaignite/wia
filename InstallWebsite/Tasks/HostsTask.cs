@@ -10,14 +10,7 @@ using InstallWebsite.Utility;
 
 namespace InstallWebsite.Tasks {
     class HostsTask : ITask {
-        private const int ADMIN_REQUEST_CANCELED_BY_USER_ERROR_CODE = 1223;
-#if DEBUG
-        private const string ADD_HOSTS_ENTRY_FORMAT = @"echo. & echo {0}    {1} >> %systemdrive%\hosts.txt";
-#else
-        const string ADD_HOSTS_ENTRY_FORMAT = @"echo. & echo {0}    {1} >> %systemdrive%\windows\system32\drivers\etc\hosts";
-#endif
-
-        public IEnumerable<Type> DependsUpon() { return new[] {typeof (WebserverTask)}; }
+        public IEnumerable<Type> DependsUpon() { return new[] {typeof (EpiFrameworkUpdateTask)}; }
 
         public void Execute(WebsiteContext context) {
             if (context.SkipHosts) {
@@ -34,7 +27,7 @@ namespace InstallWebsite.Tasks {
                 var hostAlreadyAdded = hostLines.Any(h => h.Contains(host));
                 
                 if (hostAlreadyAdded) {
-                    Logger.Warn("HOSTS-file is already updated.");
+                    Logger.Warn("No change needed.");
                     return;
                 }
 
@@ -53,6 +46,9 @@ namespace InstallWebsite.Tasks {
                 Logger.Error("Failed to add HOSTS entry. " + ex);
 			}
         }
+
+        private const int ADMIN_REQUEST_CANCELED_BY_USER_ERROR_CODE = 1223;
+        const string ADD_HOSTS_ENTRY_FORMAT = @"echo. & echo {0}    {1} >> %systemdrive%\windows\system32\drivers\etc\hosts";
 
         private void AddHostsInOtherProcess(string host) {
             try {
