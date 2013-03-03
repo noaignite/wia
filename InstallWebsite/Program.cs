@@ -66,12 +66,15 @@ namespace InstallWebsite {
                 Logger.TabIndention = 1;
                 task.Execute(context);
                 Logger.TabIndention = 0;
+
+                if (context.ExitAtNextCheck) {
+                    break;
+                }
             }
 
             Logger.Log("");
             Logger.Success("Installation finished.");
 
-            // *Check if program config exists
             // -Add url to hosts pointing to 127.0.0.1
             // Add new website in iis, path to web project
             // New app pool with .net 4.0, with credentials

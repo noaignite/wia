@@ -79,10 +79,9 @@ namespace InstallWebsite.Resolver {
         private static string GetWebProjectName(WebsiteContext context) {
             string webProjectName = context.WebProjectName;
             if (string.IsNullOrWhiteSpace(webProjectName)) {
-                var webDirectories =
-                    Directory.GetDirectories(context.CurrentDirectory)
-                             .Where(d => Path.GetFileName(d).Contains("Web"))
-                             .ToList();
+                var webDirectories = Directory.GetDirectories(context.CurrentDirectory)
+                                              .Where(d => Path.GetFileName(d).Contains("Web"))
+                                              .ToList();
 
                 if (!webDirectories.Any()) {
                     context.ExitAtNextCheck = true;
@@ -140,9 +139,8 @@ namespace InstallWebsite.Resolver {
             }
 
             var webProjectFolderPath = Path.Combine(context.CurrentDirectory, context.WebProjectName);
-            var episerverConfigPath =
-                Directory.GetFiles(webProjectFolderPath, "episerver.config", SearchOption.AllDirectories)
-                         .FirstOrDefault();
+            var episerverConfigPath = Directory.GetFiles(webProjectFolderPath, "episerver.config", SearchOption.AllDirectories)
+                                               .FirstOrDefault();
 
             if (!File.Exists(episerverConfigPath)) {
                 // the episerver config section might be in web.config
