@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AppPoolMode.cs" />
     <Compile Include="ITask.cs" />
+    <Compile Include="Resolver\ContextResolver.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
