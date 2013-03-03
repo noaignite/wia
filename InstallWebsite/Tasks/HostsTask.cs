@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Principal;
+using InstallWebsite.Model;
 using InstallWebsite.Utility;
 
 namespace InstallWebsite.Tasks {

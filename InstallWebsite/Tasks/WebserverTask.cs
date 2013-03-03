@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using InstallWebsite.Model;
 using Microsoft.Web.Administration;
 
 namespace InstallWebsite.Tasks {

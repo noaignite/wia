@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Xml.Linq;
 using CommandLine;
+using InstallWebsite.Model;
 using InstallWebsite.Resolver;
 using InstallWebsite.Utility;
 

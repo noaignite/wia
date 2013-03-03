@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using InstallWebsite.Model;
 
 namespace InstallWebsite.Tasks {
     public class HelloWorldTask : ITask {

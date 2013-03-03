@@ -1,9 +1,8 @@
 using System.Security.Principal;
-using System.Text;
 using CommandLine;
 using CommandLine.Text;
 
-namespace InstallWebsite {
+namespace InstallWebsite.Model {
     public class WebsiteContext {
         [Option('d', "directory", HelpText = "Root project directory where solution file exists.")]
         public string CurrentDirectory { get; set; }

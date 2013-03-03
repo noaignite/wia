@@ -35,9 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup />
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -56,8 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppPoolMode.cs" />
-    <Compile Include="ITask.cs" />
+    <Compile Include="Model\AppPoolMode.cs" />
+    <Compile Include="Model\ITask.cs" />
     <Compile Include="Resolver\ContextResolver.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Program.cs" />
@@ -66,11 +64,10 @@
     <Compile Include="Tasks\HostsTask.cs" />
     <Compile Include="Tasks\WebserverTask.cs" />
     <Compile Include="Utility\DependencySort.cs" />
-    <Compile Include="WebsiteContext.cs" />
+    <Compile Include="Model\WebsiteContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="app.manifest" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
