@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Web.Administration;
 using Wia.Model;
-using Wia.Properties;
 using Wia.Utility;
 
 namespace Wia.Tasks {
@@ -32,20 +31,20 @@ namespace Wia.Tasks {
                                                ? ManagedPipelineMode.Integrated
                                                : ManagedPipelineMode.Classic;
                 
-                if (!string.IsNullOrEmpty(Settings.Default.IdentityUsername)) {
+                if (!string.IsNullOrEmpty(Config.Instance.AppPoolUsername)) {
                     Logger.Log("Setting AppPool identity...");
-                    
-                    var password = Settings.Default.IdentityPassword;
+
+                    var password = Config.Instance.AppPoolPassword;
 
                     if (string.IsNullOrEmpty(password)) {
                         Logger.Warn("Please fill in password for AppPool identity user!");
-                        Console.WriteLine("\tUsername: " + Settings.Default.IdentityUsername);
+                        Console.WriteLine("\tUsername: " + Config.Instance.AppPoolUsername);
                         Console.Write("\tPassword: ");
                         password = ConsoleEx.ReadPassword();
                     }
                     
                     appPool.ProcessModel.IdentityType = ProcessModelIdentityType.SpecificUser;
-                    appPool.ProcessModel.UserName = Settings.Default.IdentityUsername;
+                    appPool.ProcessModel.UserName = Config.Instance.AppPoolUsername;
                     appPool.ProcessModel.Password = password;
                 }
 

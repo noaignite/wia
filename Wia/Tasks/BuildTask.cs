@@ -29,7 +29,7 @@ namespace Wia.Tasks {
             var buildResult = BuildManager.DefaultBuildManager.Build(buildParameters, buildRequest);
             
             if (buildResult.OverallResult == BuildResultCode.Failure) {
-                Logger.Error("Failed to build solution!");
+                Logger.Error("Failed to build the solution!");
                 Logger.Space();
                 
                 foreach (var buildError in buildLoggger.BuildErrors) {
@@ -38,7 +38,7 @@ namespace Wia.Tasks {
                 Logger.Space();
             }
             else
-                Logger.Success("Solution build successfully.");
+                Logger.Success("Solution successfully built.");
         }
     }
 

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using CommandLine;
 using Wia.Model;
-using Wia.Properties;
 using Wia.Resolver;
 using Wia.Utility;
 
@@ -35,14 +34,66 @@ namespace Wia {
                 case "install":
                     InitiateInstallTask((WebsiteContext)invokedVerbOptions);
                     break;
-                case "identity":
-                    InitiateIdentityTask((AppPoolIdentityOptions)invokedVerbOptions);
+                case "config":
+                    InitiateConfigTask((ConfigOptions)invokedVerbOptions);
                     break;
             }
 
             Console.ForegroundColor = prevColor;
         }
-        
+
+        private static void InitiateConfigTask(ConfigOptions options) {
+            // Change config
+            if (!options.ConfigKey.IsNullOrEmpty() && !options.ConfigValue.IsNullOrEmpty()) {
+                if (!options.ConfigKey.Contains(".")) {
+                    Logger.Log("Missing section prefix of config key.");
+                    return;
+                }
+
+                var keyParts = options.ConfigKey.Split('.');
+                var section = keyParts[0];
+                var key = keyParts[1];
+
+                Config.Instance.SaveValue(section, key, options.ConfigValue);
+                Logger.Success("Config has been updated.");
+                Logger.Log(options.ConfigKey + "=" + options.ConfigValue);
+            } 
+            // Display config value
+            else if (!options.ConfigKey.IsNullOrEmpty()) {
+                if (!options.ConfigKey.Contains(".")) {
+                    Logger.Log("Missing section prefix of config key.");
+                    return;
+                }
+
+                var keyParts = options.ConfigKey.Split('.');
+                var section = keyParts[0];
+                var key = keyParts[1];
+                string value;
+
+                if (options.Reset) {
+                    Config.Instance.SaveValue(section, key, null);
+                }
+
+                try {
+                    value = Config.Instance.GetValue(section, key);
+                }
+                catch (KeyNotFoundException ex) {
+                    Logger.Error(ex.Message);    
+                    return;
+                }
+                
+                Logger.Space();
+                Logger.Log(options.ConfigKey + "=" + value);
+            }
+            // Display config list
+            else {
+                Console.WriteLine("Config:");
+                foreach (var configPair in Config.Instance.GetValues()) {
+                    Console.WriteLine(configPair.Key + "=" + configPair.Value + "");
+                }
+            }
+        }
+
         private static void InitiateInstallTask(WebsiteContext context) {
             if (!context.HasAdministratorPrivileges()) {
                 Logger.Warn("WIA needs to run with administrator privileges to modify IIS and HOSTS-file.\nOpen new command prompt with \"Run as administrator\" and try again.");
@@ -69,33 +120,7 @@ namespace Wia {
                 }
             }
         }
-
-        private static void InitiateIdentityTask(AppPoolIdentityOptions options) {
-            if (options.Reset) {
-                Settings.Default.IdentityUsername = null;
-                Settings.Default.IdentityPassword = null;
-                Settings.Default.Save();
-
-                Logger.Success("Reseted the AppPool Identity settings.");
-            } else if (options.SuppliedLoginDetails) {
-                if (!string.IsNullOrEmpty(options.Username)) {
-                    Settings.Default.IdentityUsername = options.Username;
-                }
-            
-                if (!string.IsNullOrEmpty(options.Password)) {
-                    Settings.Default.IdentityPassword = options.Password;
-                }
-                Settings.Default.Save();
-                Logger.Success("Saved AppPool Identity settings.");
-            }
-            else {
-                Logger.Log("Stored details:");
-                
-                Logger.Log("Username: " + Settings.Default.IdentityUsername);
-                Logger.Log("Password: " + Settings.Default.IdentityPassword);
-            }
-        }
-
+        
         private static void DisplayContext(WebsiteContext context) {
             Logger.TabIndention = 1;
 

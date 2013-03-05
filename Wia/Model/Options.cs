@@ -6,8 +6,8 @@ namespace Wia.Model {
         [VerbOption("install", HelpText = "Install website.")]
         public WebsiteContext InstallWebsiteVerb { get; set; }
 
-        [VerbOption("identity", HelpText = "Change the Application Pool Identity that is used in IIS.")]
-        public AppPoolIdentityOptions AppPoolIdentityVerb { get; set; }
+        [VerbOption("config", HelpText = "Change configuration settings for WIA.")]
+        public ConfigOptions ConfigVerb { get; set; }
 
         [HelpOption]
         public string GetUsage() {

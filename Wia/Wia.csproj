@@ -60,20 +60,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\AppPoolIdentityOptions.cs" />
+    <Compile Include="Config\ConfigBase.cs" />
     <Compile Include="Model\AppPoolMode.cs" />
+    <Compile Include="Config\ConfigOptions.cs" />
+    <Compile Include="Config\ConfigProperty.cs" />
     <Compile Include="Model\ITask.cs" />
     <Compile Include="Model\Options.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
+    <Compile Include="Model\SettingAttribute.cs" />
+    <Compile Include="Config\Config.cs" />
     <Compile Include="Resolver\ContextResolver.cs" />
     <Compile Include="Tasks\BuildTask.cs" />
     <Compile Include="Tasks\EpiFrameworkUpdateTask.cs" />
     <Compile Include="Tasks\PingSiteTask.cs" />
     <Compile Include="Utility\ConsoleEx.cs" />
+    <Compile Include="Utility\IniFileManager.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,15 +81,13 @@
     <Compile Include="Tasks\WebserverTask.cs" />
     <Compile Include="Utility\DependencySort.cs" />
     <Compile Include="Model\WebsiteContext.cs" />
+    <Compile Include="Utility\SettingsManager.cs" />
+    <Compile Include="Utility\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <Content Include="app.manifest" />
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
