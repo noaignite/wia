@@ -12,7 +12,6 @@ using Wia.Utility;
 namespace Wia {
     internal class Program {
         private static void Main(string[] args) {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             var prevColor = Console.ForegroundColor;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
             Console.ForegroundColor = ConsoleColor.White;
@@ -28,6 +27,7 @@ namespace Wia {
             });
 
             if (requestedHelp) {
+                Console.ForegroundColor = prevColor;
                 return;
             }
 
@@ -42,12 +42,13 @@ namespace Wia {
 
             Console.ForegroundColor = prevColor;
         }
-
-        static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args) {
-            return null;
-        }
         
         private static void InitiateInstallTask(WebsiteContext context) {
+            if (!context.HasAdministratorPrivileges()) {
+                Logger.Warn("WIA needs to run with administrator privileges to modify IIS and HOSTS-file.\nOpen new command prompt with \"Run as administrator\" and try again.");
+                return;
+            }
+            
             ContextResolver.ResolveContextDetails(context);
 
             if (context.ExitAtNextCheck)

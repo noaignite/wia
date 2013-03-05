@@ -93,7 +93,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rem Create a single .exe that combines the root .exe and all subassemblies.
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+rem Create a single .exe that combines the root .exe and all subassemblies.
 "$(SolutionDir)Packages\ilmerge.2.12.0803\ILMerge.exe" /out:"$(TargetDir)$(TargetName).all.exe" "$(TargetDir)$(TargetName).exe" "$(TargetDir)*.dll" /target:exe /targetplatform:v4,C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /wildcards
 rem Remove all subassemblies.
 del *.dll
@@ -106,7 +107,8 @@ del "$(TargetDir)$(TargetName).exe"
 rem Rename the combined .exe and .pdb to the original project name we started with.
 ren "$(TargetDir)$(TargetName).all.pdb" "$(TargetName).pdb"
 ren "$(TargetDir)$(TargetName).all.exe" "$(TargetName).exe"
-exit 0</PostBuildEvent>
+exit 0
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
