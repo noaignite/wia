@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallWebsite", "InstallWebsite\InstallWebsite.csproj", "{DF84D09F-6F87-4683-837D-FDEF3FBAE89B}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wia", "InstallWebsite\Wia.csproj", "{DF84D09F-6F87-4683-837D-FDEF3FBAE89B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
-using InstallWebsite.Model;
+using Wia.Model;
 
-namespace InstallWebsite.Resolver {
+namespace Wia.Resolver {
     public class ContextResolver {
         public static void ResolveContextDetails(WebsiteContext context) {
             if (string.IsNullOrWhiteSpace(context.CurrentDirectory))

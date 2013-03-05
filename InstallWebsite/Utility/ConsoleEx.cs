@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace InstallWebsite.Utility {
+namespace Wia.Utility {
     public static class ConsoleEx {
         /// <summary>
         /// Like System.Console.ReadLine(), only with a mask.

@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using InstallWebsite.Model;
-using InstallWebsite.Utility;
-using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Logging;
-using ITask = InstallWebsite.Model.ITask;
+using Wia.Model;
+using Wia.Utility;
+using ITask = Wia.Model.ITask;
 
-namespace InstallWebsite.Tasks {
+namespace Wia.Tasks {
     class BuildTask : ITask {
         public IEnumerable<Type> DependsUpon() {
             return new [] { typeof(HostsTask) };

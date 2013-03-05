@@ -4,14 +4,15 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using CommandLine;
-using InstallWebsite.Model;
-using InstallWebsite.Properties;
-using InstallWebsite.Resolver;
-using InstallWebsite.Utility;
+using Wia.Model;
+using Wia.Properties;
+using Wia.Resolver;
+using Wia.Utility;
 
-namespace InstallWebsite {
+namespace Wia {
     internal class Program {
         private static void Main(string[] args) {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             var prevColor = Console.ForegroundColor;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
             Console.ForegroundColor = ConsoleColor.White;
@@ -40,6 +41,10 @@ namespace InstallWebsite {
             }
 
             Console.ForegroundColor = prevColor;
+        }
+
+        static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args) {
+            return null;
         }
         
         private static void InitiateInstallTask(WebsiteContext context) {

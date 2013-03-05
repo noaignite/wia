@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using InstallWebsite.Model;
-using InstallWebsite.Utility;
+using Wia.Model;
+using Wia.Utility;
 
-namespace InstallWebsite.Tasks {
+namespace Wia.Tasks {
     class PingSiteTask : ITask {
         public IEnumerable<Type> DependsUpon() {
             return new[] { typeof(BuildTask) };

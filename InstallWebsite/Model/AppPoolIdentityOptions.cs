@@ -1,7 +1,6 @@
 ﻿using CommandLine;
-using CommandLine.Text;
 
-namespace InstallWebsite.Model {
+namespace Wia.Model {
     public class AppPoolIdentityOptions {
         [Option('u', "username", HelpText = "Username for the Application Pool Identity in form of \"domain\\username\".")]
         public string Username { get; set; }

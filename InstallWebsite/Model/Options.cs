@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CommandLine;
+﻿using CommandLine;
 using CommandLine.Text;
 
-namespace InstallWebsite.Model {
+namespace Wia.Model {
     public class Options {
         [VerbOption("install", HelpText = "Install website.")]
         public WebsiteContext InstallWebsiteVerb { get; set; }

@@ -8,8 +8,8 @@
     <ProjectGuid>{DF84D09F-6F87-4683-837D-FDEF3FBAE89B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InstallWebsite</RootNamespace>
-    <AssemblyName>InstallWebsite</AssemblyName>
+    <RootNamespace>Wia</RootNamespace>
+    <AssemblyName>Wia</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -92,6 +92,22 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rem Create a single .exe that combines the root .exe and all subassemblies.
+"$(SolutionDir)Packages\ilmerge.2.12.0803\ILMerge.exe" /out:"$(TargetDir)$(TargetName).all.exe" "$(TargetDir)$(TargetName).exe" "$(TargetDir)*.dll" /target:exe /targetplatform:v4,C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /wildcards
+rem Remove all subassemblies.
+del *.dll
+rem Remove all .pdb files (except the new, combined pdb we just created).
+ren "$(TargetDir)$(TargetName).all.pdb" "$(TargetName).all.pdb.temp"
+del *.pdb
+ren "$(TargetDir)$(TargetName).all.pdb.temp" "$(TargetName).all.pdb"
+rem Delete the original, non-combined .exe.
+del "$(TargetDir)$(TargetName).exe"
+rem Rename the combined .exe and .pdb to the original project name we started with.
+ren "$(TargetDir)$(TargetName).all.pdb" "$(TargetName).pdb"
+ren "$(TargetDir)$(TargetName).all.exe" "$(TargetName).exe"
+exit 0</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

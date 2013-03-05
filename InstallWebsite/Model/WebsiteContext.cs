@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Principal;
 using CommandLine;
-using CommandLine.Text;
 
-namespace InstallWebsite.Model {
+namespace Wia.Model {
     public class WebsiteContext {
         public WebsiteContext() {
             SkipTasks = new string[] {};

@@ -4,11 +4,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Principal;
-using InstallWebsite.Model;
-using InstallWebsite.Utility;
+using Wia.Model;
+using Wia.Utility;
 
-namespace InstallWebsite.Tasks {
+namespace Wia.Tasks {
     class HostsTask : ITask {
         public IEnumerable<Type> DependsUpon() { return new[] {typeof (EpiFrameworkUpdateTask)}; }
 

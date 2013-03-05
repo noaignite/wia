@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security;
-using System.Text;
-using System.Xml.Linq;
-using InstallWebsite.Model;
-using InstallWebsite.Properties;
-using InstallWebsite.Utility;
 using Microsoft.Web.Administration;
+using Wia.Model;
+using Wia.Properties;
+using Wia.Utility;
 
-namespace InstallWebsite.Tasks {
+namespace Wia.Tasks {
     class WebserverTask : ITask {
         public IEnumerable<Type> DependsUpon() { return null; }
 

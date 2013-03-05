@@ -8,11 +8,11 @@ using CommandLine.Text;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Install Website")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("WIA")]
+[assembly: AssemblyDescription("Web Install Assistant")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nansen")]
-[assembly: AssemblyProduct("Install Website")]
+[assembly: AssemblyProduct("WIA")]
 [assembly: AssemblyCopyright("Copyright © Nansen 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace InstallWebsite.Utility {
+namespace Wia.Utility {
     public static class DependencySorter {
         public static IEnumerable<T> DependencySort<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> dependencies) {
             var sorted = new List<T>();

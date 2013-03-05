@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
-using InstallWebsite.Model;
-using InstallWebsite.Properties;
-using InstallWebsite.Utility;
 using Microsoft.Web.Administration;
+using Wia.Model;
+using Wia.Utility;
 
-namespace InstallWebsite.Tasks {
+namespace Wia.Tasks {
     class EpiFrameworkUpdateTask : ITask {
         public IEnumerable<Type> DependsUpon() {
             return new[] { typeof(WebserverTask) };

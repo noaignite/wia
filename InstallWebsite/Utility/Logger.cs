@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace InstallWebsite.Utility {
+namespace Wia.Utility {
     internal class Logger {
         public static int TabIndention { get; set; }
 
