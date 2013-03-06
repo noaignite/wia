@@ -7,7 +7,7 @@ using Wia.Utility;
 namespace Wia.Tasks {
     class PingSiteTask : ITask {
         public IEnumerable<Type> DependsUpon() {
-            return new[] { typeof(BuildTask) };
+            return new[] { typeof(LicenseCopyTask) };
         }
 
         public void Execute(WebsiteContext context) {

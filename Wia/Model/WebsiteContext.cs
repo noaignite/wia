@@ -35,7 +35,7 @@ namespace Wia.Model {
         [Option("skipHosts", HelpText = "Skip adding HOSTS entry.", DefaultValue = false)]
         public bool SkipHosts { get; set; }
 
-        [OptionArray("skipTasks", HelpText = "List of tasks to skip running (space separated).")]
+        [OptionArray("skip", HelpText = "List of tasks to skip running (space separated).")]
         public string[] SkipTasks { get; set; }
 
         [Option('f', "force", HelpText = "Do not prompt to confirm configuration.", DefaultValue = false)]

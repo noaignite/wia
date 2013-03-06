@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Wia.Model;
-using Wia.Utility;
+﻿using Wia.Model;
 
 namespace Wia {
     public class Config : ConfigBase {
@@ -21,5 +15,8 @@ namespace Wia {
 
         [Setting("webserver", "password", HelpText = "Password for the Application Pool Identity (optional).")]
         public string AppPoolPassword { get; set; }
+
+        [Setting("license", "directory", HelpText = "Absolute path to a directory with folders for each EPiServer CMS version containing a license file.")]
+        public string EpiserverLicensePath { get; set; }
     }
 }
