@@ -19,6 +19,11 @@ namespace Wia.Tasks {
 
             string host = new Uri(context.ProjectUrl).Authority;
 
+            if (host == "localhost") {
+                Logger.Log("Skip because host is \"localhost\".");
+                return;
+            }
+
             try {
                 var hostsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), @"drivers\etc\hosts");
 
