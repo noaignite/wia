@@ -164,16 +164,6 @@ namespace Wia {
             else {
                 Logger.Success("Installation finished successfully.");                
             }
-
-            // * Add url to hosts pointing to 127.0.0.1
-            // * Add new website in iis, path to web project
-            // * New app pool with .net 4.0, with credentials
-            // * Build site
-            // * Remove readlock on episerver framework
-            // * Ping website url
-            // Copy a license file to web project
-
-            // note: handle case when projectUrl = "localhost".
         }
 
         private static IEnumerable<ITask> GetTasksInAssembly() {
