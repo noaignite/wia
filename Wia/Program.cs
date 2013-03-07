@@ -81,9 +81,16 @@ namespace Wia {
                     Logger.Error(ex.Message);    
                     return;
                 }
-                
-                Logger.Space();
-                Logger.Log(options.ConfigKey + "=" + value);
+
+				var configPair = Config.Instance.GetValues().First(opt => opt.Key.Equals(options.ConfigKey, StringComparison.OrdinalIgnoreCase));
+
+				Logger.Log(configPair.HelpText);
+				Logger.Space();
+				Logger.Log(options.ConfigKey + "=" + value);
+
+				Logger.Log("To change the value run:");
+				Logger.Log("To change the value run:");
+				Logger.Log("wia config " + options.ConfigKey + " valueHere");
             }
             // Display config list
             else {
