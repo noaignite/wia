@@ -17,10 +17,9 @@ namespace Wia {
 
             string invokedVerb = null;
             object invokedVerbOptions = null;
-            
+
             var options = new Options();
-            var requestedHelp = !Parser.Default.ParseArguments(args, options, (verb, subOptions) =>
-            {
+            var requestedHelp = !Parser.Default.ParseArguments(args, options, (verb, subOptions) => {
                 invokedVerb = verb;
                 invokedVerbOptions = subOptions;
             });
@@ -57,7 +56,7 @@ namespace Wia {
                 Config.Instance.SaveValue(section, key, options.ConfigValue);
                 Logger.Success("Config has been updated.");
                 Logger.Log(options.ConfigKey + "=" + options.ConfigValue);
-            } 
+            }
             // Display config value
             else if (!options.ConfigKey.IsNullOrEmpty()) {
                 if (!options.ConfigKey.Contains(".")) {
@@ -78,19 +77,19 @@ namespace Wia {
                     value = Config.Instance.GetValue(section, key);
                 }
                 catch (KeyNotFoundException ex) {
-                    Logger.Error(ex.Message);    
+                    Logger.Error(ex.Message);
                     return;
                 }
 
-				var configPair = Config.Instance.GetValues().First(opt => opt.Key.Equals(options.ConfigKey, StringComparison.OrdinalIgnoreCase));
+                var configPair = Config.Instance.GetValues().First(opt => opt.Key.Equals(options.ConfigKey, StringComparison.OrdinalIgnoreCase));
 
-				Logger.Log(configPair.HelpText);
-				Logger.Space();
-				Logger.Log(options.ConfigKey + "=" + value);
+                Logger.Log(configPair.HelpText);
+                Logger.Space();
+                Logger.Log(options.ConfigKey + "=" + value);
 
-				Logger.Log("To change the value run:");
-				Logger.Log("To change the value run:");
-				Logger.Log("wia config " + options.ConfigKey + " valueHere");
+                Logger.Log("To change the value run:");
+                Logger.Log("To change the value run:");
+                Logger.Log("wia config " + options.ConfigKey + " valueHere");
             }
             // Display config list
             else {
@@ -106,7 +105,7 @@ namespace Wia {
                 Logger.Warn("WIA needs to run with administrator privileges to modify IIS and HOSTS-file.\nOpen new command prompt with \"Run as administrator\" and try again.");
                 return;
             }
-            
+
             ContextResolver.ResolveContextDetails(context);
 
             if (context.ExitAtNextCheck)
@@ -127,7 +126,7 @@ namespace Wia {
                 }
             }
         }
-        
+
         private static void DisplayContext(WebsiteContext context) {
             Logger.TabIndention = 1;
 
@@ -137,7 +136,7 @@ namespace Wia {
                     Logger.Log("{0} = {1}", prop.Name, prop.GetValue(context, null));
                 }
             }
-            
+
             Logger.TabIndention = 0;
         }
 
@@ -162,19 +161,19 @@ namespace Wia {
                     break;
                 }
             }
-            
+
             Logger.Space();
 
             if (context.ExitAtNextCheck) {
-                Logger.Error("Installation failed.");                                
+                Logger.Error("Installation failed.");
             }
             else {
-                Logger.Success("Installation finished successfully.");                
+                Logger.Success("Installation finished successfully.");
             }
         }
 
         private static IEnumerable<ITask> GetTasksInAssembly() {
-            var type = typeof (ITask);
+            var type = typeof(ITask);
             var tasks = AppDomain.CurrentDomain.GetAssemblies().ToList()
                                  .SelectMany(s => s.GetTypes())
                                  .Where(t => type.IsAssignableFrom(t) && t.IsClass)
