@@ -122,7 +122,7 @@ namespace Wia {
                 Console.WriteLine("\nDo you want to continue installation with this configuration? (y/n)");
                 var response = Console.ReadLine();
 
-                if (response.Equals("y", StringComparison.InvariantCultureIgnoreCase)) {
+                if (response != null && response.Equals("y", StringComparison.InvariantCultureIgnoreCase)) {
                     ProcessTasks(context);
                 }
             }
