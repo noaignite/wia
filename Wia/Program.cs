@@ -93,9 +93,11 @@ namespace Wia {
             }
             // Display config list
             else {
-                Console.WriteLine("Config:");
+                Logger.Log("Usage: wia config <key> [<value>] [--reset]");
+                Logger.Space();
+
                 foreach (var configPair in Config.Instance.GetValues()) {
-                    Console.WriteLine(configPair.Key + "=" + configPair.Value + "");
+                    Logger.Log(configPair.Key + "=" + configPair.Value + "");
                 }
             }
         }
