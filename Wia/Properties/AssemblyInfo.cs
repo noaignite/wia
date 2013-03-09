@@ -39,4 +39,4 @@ using CommandLine.Text;
 
 [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyInformationalVersionAttribute("1.0")]
-[assembly: AssemblyUsage("Usage: InstallWebsite")]
+[assembly: AssemblyUsage("Usage: wia <command>")]
