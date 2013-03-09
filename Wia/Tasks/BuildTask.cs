@@ -40,22 +40,22 @@ namespace Wia.Tasks {
             else
                 Logger.Success("Solution successfully built.");
         }
-    }
 
-    class InMemoryBuildLogger : ILogger {
-        public List<string> BuildErrors { get; private set; }
+        class InMemoryBuildLogger : ILogger {
+            public List<string> BuildErrors { get; private set; }
 
-        public void Initialize(IEventSource eventSource) {
-            BuildErrors = new List<string>();
-            eventSource.ErrorRaised += EventSourceOnErrorRaised;
+            public void Initialize(IEventSource eventSource) {
+                BuildErrors = new List<string>();
+                eventSource.ErrorRaised += EventSourceOnErrorRaised;
+            }
+
+            private void EventSourceOnErrorRaised(object sender, BuildErrorEventArgs buildErrorEventArgs) {
+                BuildErrors.Add(buildErrorEventArgs.Message);
+            }
+
+            public void Shutdown() { }
+            public LoggerVerbosity Verbosity { get; set; }
+            public string Parameters { get; set; }
         }
-
-        private void EventSourceOnErrorRaised(object sender, BuildErrorEventArgs buildErrorEventArgs) {
-            BuildErrors.Add(buildErrorEventArgs.Message);
-        }
-
-        public void Shutdown() { }
-        public LoggerVerbosity Verbosity { get; set; }
-        public string Parameters { get; set; }
     }
 }
