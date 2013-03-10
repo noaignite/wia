@@ -32,6 +32,7 @@ WIA will always check first if it needs to run the task. This means you can run 
 	5. Find PATH in the bottom pane and edit it.
 	6. Append `;C:\Tools` (note the beginning semicolon) and save the changes.
 3. Open a new Command Prompt with administrator rights and run `wia`. If everything is right a help text will be displayed.
+4. *Optional*: Add a menu item for opening a elevated command prompt in shift-right-click menu. You can do that by running the "Add-admin-cmd-to-right-click.reg" file.
 
 ### Support
 
