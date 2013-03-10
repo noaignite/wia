@@ -61,7 +61,8 @@ namespace Wia.Tasks {
                 Logger.Log("Added binding for " + host);
 
                 try {
-                    manager.CommitChanges();                    
+                    manager.CommitChanges();
+                    Logger.Success("Site and AppPool has been created in IIS.");
                 }
                 catch (Exception ex) {
                     Logger.Error(ex.ToString());
