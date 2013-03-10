@@ -23,7 +23,7 @@ namespace Wia.Tasks {
             }
 
             if (licenseDirectory.IsNullOrEmpty()) {
-                Logger.Warn("Skipping task because config is missing for EPiServer license directory.");
+                Logger.Warn("Skipping because config is missing for EPiServer license directory.");
                 Logger.Log(@"To update run command:");
                 Logger.TabIndention += 1;
                 Logger.Log(@"wia config license.directory c:\path\to\directory");
@@ -47,7 +47,7 @@ namespace Wia.Tasks {
                 return;
             }
 
-            Logger.Success("License file for EPiServer CMS {0} copied to website.", context.EpiserverVersion);
+            Logger.Success("Copied license file for EPiServer CMS {0} to website.", context.EpiserverVersion);
         }
     }
 }
