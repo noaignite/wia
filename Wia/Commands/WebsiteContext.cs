@@ -12,7 +12,7 @@ namespace Wia.Commands {
         [Option('d', "directory", HelpText = "Root project directory where solution file exists.")]
         public string CurrentDirectory { get; set; }
 
-        [Option('n', "name", HelpText = "Name for project.")]
+        [Option('n', "name", HelpText = "Name of project. Used in IIS.")]
         public string ProjectName { get; set; }
 
         [Option("webproject", HelpText = "Name of the web project directory.")]
