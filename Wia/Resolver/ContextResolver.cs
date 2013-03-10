@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Wia.Model;
+using Wia.Utility;
 
 namespace Wia.Resolver {
     public class ContextResolver {
@@ -11,8 +12,8 @@ namespace Wia.Resolver {
             if (string.IsNullOrWhiteSpace(context.CurrentDirectory))
                 context.CurrentDirectory = Environment.CurrentDirectory;
 
-            context.WebProjectName = GetWebProjectName(context);
             context.ProjectName = GetProjectName(context);
+            context.WebProjectName = GetWebProjectName(context);
             context.ProjectUrl = GetProjectUrl(context);
             context.FrameworkVersion = GetFrameworkVersion(context);
             context.EpiserverVersion = GetEpiserverVersion(context);
@@ -75,10 +76,13 @@ namespace Wia.Resolver {
         }
 
         private static string GetWebProjectName(WebsiteContext context) {
+            if (context.ExitAtNextCheck)
+                return null;
+
             string webProjectName = context.WebProjectName;
             if (string.IsNullOrWhiteSpace(webProjectName)) {
-                var webDirectories = Directory.GetDirectories(context.CurrentDirectory)
-                                              .Where(d => Path.GetFileName(d).Contains("Web"))
+                var webDirectories = Directory.EnumerateDirectories(context.CurrentDirectory)
+                                              .Where(dir => Path.GetFileName(dir).Contains("Web"))
                                               .ToList();
 
                 if (!webDirectories.Any()) {
@@ -112,10 +116,15 @@ namespace Wia.Resolver {
             if (context.ExitAtNextCheck)
                 return null;
 
+            string solutionFileName = Directory.EnumerateFiles(context.CurrentDirectory).FirstOrDefault(x => x.EndsWith(".sln"));
             string projectName = context.ProjectName;
 
+            if (solutionFileName.IsNullOrEmpty()) {
+                context.ExitAtNextCheck = true;
+                Console.WriteLine("Could not find a solution file in the current directory.");
+            }
+
             if (string.IsNullOrWhiteSpace(projectName)) {
-                var solutionFileName = Directory.GetFiles(context.CurrentDirectory).FirstOrDefault(x => x.EndsWith(".sln"));
                 projectName = Path.GetFileNameWithoutExtension(solutionFileName);
             }
 

@@ -82,7 +82,6 @@
     <Compile Include="Tasks\WebserverTask.cs" />
     <Compile Include="Utility\DependencySort.cs" />
     <Compile Include="Model\WebsiteContext.cs" />
-    <Compile Include="Utility\SettingsManager.cs" />
     <Compile Include="Utility\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
