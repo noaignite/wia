@@ -11,7 +11,7 @@ using ITask = Wia.Model.ITask;
 namespace Wia.Tasks {
     class BuildTask : ITask {
         public IEnumerable<Type> DependsUpon() {
-            return new [] { typeof(HostsTask) };
+            return new[] { typeof(LicenseCopyTask) };
         }
 
         public void Execute(WebsiteContext context) {

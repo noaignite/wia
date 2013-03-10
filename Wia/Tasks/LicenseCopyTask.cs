@@ -10,7 +10,7 @@ namespace Wia.Tasks {
         const string LICENSE_FILENAME = "License.config";
 
         public IEnumerable<Type> DependsUpon() {
-            return new[] {typeof (BuildTask)};
+            return new[] {typeof (HostsTask)};
         }
 
         public void Execute(WebsiteContext context) {
