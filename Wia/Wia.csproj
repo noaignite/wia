@@ -93,7 +93,7 @@
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
 rem Create a single .exe that combines the root .exe and all subassemblies.
-"$(SolutionDir)Packages\ilmerge.2.12.0803\ILMerge.exe" /out:"$(TargetDir)$(TargetName).all.exe" "$(TargetDir)$(TargetName).exe" "$(TargetDir)*.dll" /target:exe /targetplatform:v4,C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /wildcards
+"$(SolutionDir)Packages\ilmerge.2.13.0307\ILMerge.exe" /out:"$(TargetDir)$(TargetName).all.exe" "$(TargetDir)$(TargetName).exe" "$(TargetDir)*.dll" /target:exe /targetplatform:v4,C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /wildcards
 rem Remove all subassemblies.
 del *.dll
 rem Remove all .pdb files (except the new, combined pdb we just created).
