@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Web.Administration;
+using Wia.Commands;
 using Wia.Model;
 using Wia.Utility;
 

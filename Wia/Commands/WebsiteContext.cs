@@ -1,8 +1,9 @@
 using System.IO;
 using System.Security.Principal;
 using CommandLine;
+using Wia.Model;
 
-namespace Wia.Model {
+namespace Wia.Commands {
     public class WebsiteContext {
         public WebsiteContext() {
             SkipTasks = new string[] {};
@@ -26,7 +27,7 @@ namespace Wia.Model {
         [Option('e', "epiversion", HelpText = "EPiServer version, to know what license file is needed.")]
         public int EpiserverVersion { get; set; }
 
-        [Option("poolmode", HelpText = "If app pool should run in Integrated or Classic.", DefaultValue = AppPoolMode.Integrated)]
+        [Option("poolmode", HelpText = "If AppPool should run in Integrated or Classic.", DefaultValue = AppPoolMode.Integrated)]
         public AppPoolMode AppPoolMode { get; set; }
 
         [Option("enable32bit", HelpText = "If app pool should set Enable 32 bit Applications.", DefaultValue = false)]

@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using CommandLine.Text;
 
-namespace Wia.Model {
+namespace Wia.Commands {
     public class Options {
         [VerbOption("install", HelpText = "Install website.")]
         public WebsiteContext InstallWebsiteVerb { get; set; }

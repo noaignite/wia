@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using CommandLine;
+using Wia.Commands;
 using Wia.Model;
 using Wia.Resolver;
 using Wia.Utility;
@@ -87,8 +88,7 @@ namespace Wia {
                 Logger.Space();
                 Logger.Log(options.ConfigKey + "=" + value);
 
-                Logger.Log("To change the value run:");
-                Logger.Log("To change the value run:");
+                Logger.Log("To update the value run:");
                 Logger.Log("wia config " + options.ConfigKey + " valueHere");
             }
             // Display config list
@@ -103,11 +103,6 @@ namespace Wia {
         }
 
         private static void InitiateInstallTask(WebsiteContext context) {
-            if (!context.HasAdministratorPrivileges()) {
-                Logger.Warn("WIA needs to run with administrator privileges to modify IIS and HOSTS-file.\nOpen new command prompt with \"Run as administrator\" and try again.");
-                return;
-            }
-
             ContextResolver.ResolveContextDetails(context);
 
             if (context.ExitAtNextCheck)
@@ -115,6 +110,12 @@ namespace Wia {
 
             Console.WriteLine("\nConfiguration:");
             DisplayContext(context);
+
+            if (!context.HasAdministratorPrivileges()) {
+                Logger.Space();
+                Logger.Warn("WIA needs to run with administrator privileges to modify IIS and HOSTS-file.\nOpen new command prompt with \"Run as administrator\" and try again.");
+                return;
+            }
 
             if (context.Force) {
                 ProcessTasks(context);

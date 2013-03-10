@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Wia.Commands;
 
 namespace Wia.Model {
     internal interface ITask {

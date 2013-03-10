@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace Wia {
+namespace Wia.Commands {
     public class ConfigOptions {
         [Option('r', "reset", HelpText = "Resets the value to null")]
         public bool Reset { get; set; }

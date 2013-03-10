@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Wia.Model {
+namespace Wia {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public class SettingAttribute : Attribute {
-        public SettingAttribute(string section, string key) {
+    public class ConfigAttribute : Attribute {
+        public ConfigAttribute(string section, string key) {
             Section = section;
             Key = key;
         }

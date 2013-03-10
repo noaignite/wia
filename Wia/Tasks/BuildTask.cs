@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
-using Wia.Model;
+using Wia.Commands;
 using Wia.Utility;
 using ITask = Wia.Model.ITask;
 

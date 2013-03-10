@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Wia.Commands;
 using Wia.Model;
 using Wia.Utility;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Wia.Commands;
 using Wia.Model;
 using Wia.Utility;
 

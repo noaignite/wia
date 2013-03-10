@@ -18,10 +18,10 @@ namespace Wia {
         
         public void Load() {
             var iniFileManager = new IniFileManager(_configPath);
-            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(SettingAttribute), false));
+            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(ConfigAttribute), false));
 
             foreach (var prop in properties) {
-                var settingAttribute = (SettingAttribute)prop.GetCustomAttributes(typeof(SettingAttribute), false).FirstOrDefault();
+                var settingAttribute = (ConfigAttribute)prop.GetCustomAttributes(typeof(ConfigAttribute), false).FirstOrDefault();
                 var valueFromConfig = iniFileManager.GetValue(settingAttribute.Section, settingAttribute.Key);
 
                 prop.SetValue(this, valueFromConfig, null);
@@ -31,10 +31,10 @@ namespace Wia {
 
         public void Save() {
             var iniFileManager = new IniFileManager(_configPath);
-            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(SettingAttribute), false));
+            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(ConfigAttribute), false));
             
             foreach (var prop in properties) {
-                var settingAttribute = (SettingAttribute)prop.GetCustomAttributes(typeof (SettingAttribute), false).FirstOrDefault();
+                var settingAttribute = (ConfigAttribute)prop.GetCustomAttributes(typeof (ConfigAttribute), false).FirstOrDefault();
                 var valueFromMemory = prop.GetValue(this, null) as string;
 
                 iniFileManager.SetValue(settingAttribute.Section, settingAttribute.Key, valueFromMemory);
@@ -44,10 +44,10 @@ namespace Wia {
         }
 
         public string GetValue(string section, string key) {
-            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(SettingAttribute), false));
+            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(ConfigAttribute), false));
 
             foreach (var prop in properties) {
-                var settingAttribute = (SettingAttribute)prop.GetCustomAttributes(typeof(SettingAttribute), false).FirstOrDefault();
+                var settingAttribute = (ConfigAttribute)prop.GetCustomAttributes(typeof(ConfigAttribute), false).FirstOrDefault();
 
                 if (settingAttribute.Section.Equals(section, StringComparison.OrdinalIgnoreCase) &&
                     settingAttribute.Key.Equals(key, StringComparison.OrdinalIgnoreCase)) {
@@ -59,10 +59,10 @@ namespace Wia {
         }
 
         public IEnumerable<ConfigProperty> GetValues() {
-            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(SettingAttribute), false));
+            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(ConfigAttribute), false));
 
             foreach (var prop in properties) {
-                var settingAttribute = (SettingAttribute)prop.GetCustomAttributes(typeof(SettingAttribute), false).FirstOrDefault();
+                var settingAttribute = (ConfigAttribute)prop.GetCustomAttributes(typeof(ConfigAttribute), false).FirstOrDefault();
                 var key = settingAttribute.Section + "." + settingAttribute.Key;
                 var value = prop.GetValue(this, null) as string;
 
@@ -71,13 +71,13 @@ namespace Wia {
         }
 
         public void SaveValue(string section, string key, string value) {
-            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(SettingAttribute), false));
+            var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(ConfigAttribute), false));
 
             foreach (var prop in properties) {
-                var settingAttribute = (SettingAttribute)prop.GetCustomAttributes(typeof(SettingAttribute), false).FirstOrDefault();
+                var settingAttribute = (ConfigAttribute)prop.GetCustomAttributes(typeof(ConfigAttribute), false).FirstOrDefault();
                 
                 if (settingAttribute.Section.Equals(section, StringComparison.OrdinalIgnoreCase) &&
-                    settingAttribute.Key.Equals(key, StringComparison.OrdinalIgnoreCase)) {
+                        settingAttribute.Key.Equals(key, StringComparison.OrdinalIgnoreCase)) {
                     prop.SetValue(this, value, null);
                 }
             }

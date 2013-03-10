@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using Wia.Model;
+using Wia.Commands;
 using Wia.Utility;
 
 namespace Wia.Resolver {
@@ -11,6 +11,8 @@ namespace Wia.Resolver {
         public static void ResolveContextDetails(WebsiteContext context) {
             if (string.IsNullOrWhiteSpace(context.CurrentDirectory))
                 context.CurrentDirectory = Environment.CurrentDirectory;
+            else
+                context.CurrentDirectory = Path.Combine(Environment.CurrentDirectory, context.CurrentDirectory);
 
             context.ProjectName = GetProjectName(context);
             context.WebProjectName = GetWebProjectName(context);
