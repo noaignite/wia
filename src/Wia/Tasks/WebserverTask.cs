@@ -75,11 +75,11 @@ namespace Wia.Tasks {
 
         private static string GetFrameworkVersion(WebsiteContext context) {
             var frameworkVersion = context.FrameworkVersion;
-            if (frameworkVersion <= 4.5d) {
-                frameworkVersion = 4;
-            }
-            if (frameworkVersion <= 3.5d) {
+            if (frameworkVersion <= 3.5) {
                 frameworkVersion = 2;
+            } 
+            else if (frameworkVersion <= 4.5) {
+                frameworkVersion = 4;
             }
             return string.Format("v{0:0.0}", frameworkVersion);
         }
