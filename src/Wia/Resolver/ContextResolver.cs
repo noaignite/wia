@@ -47,7 +47,7 @@ namespace Wia.Resolver {
             string webProjectName = context.WebProjectName;
             if (string.IsNullOrWhiteSpace(webProjectName)) {
                 var webDirectories = Directory.EnumerateDirectories(context.CurrentDirectory)
-                                              .Where(dir => Path.GetFileName(dir).Contains("Web"))
+                                              .Where(dir => Path.GetFileName(dir).Contains("Web", StringComparison.OrdinalIgnoreCase))
                                               .ToList();
 
                 if (!webDirectories.Any()) {
