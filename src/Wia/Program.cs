@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using CommandLine;
 using Wia.Commands;
 using Wia.Model;
@@ -11,11 +12,12 @@ using Wia.Utility;
 
 namespace Wia {
     internal class Program {
+        [STAThread]
         private static void Main(string[] args) {
             var prevColor = Console.ForegroundColor;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
             Console.ForegroundColor = ConsoleColor.White;
-
+            
             string invokedVerb = null;
             object invokedVerbOptions = null;
 
@@ -171,7 +173,8 @@ namespace Wia {
                 Logger.Error("Installation failed.");
             }
             else {
-                Logger.Success("Installation finished successfully.");
+                Logger.Success("Installation finished successfully (and URL has been put in clipboard)");
+                Clipboard.SetText(context.ProjectUrl);
             }
         }
 
