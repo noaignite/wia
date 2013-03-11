@@ -15,6 +15,12 @@ namespace Wia.Tasks {
         }
 
         public void Execute(WebsiteContext context) {
+            // EPiServerFramework.config came with CMS 6
+            if (context.EpiserverVersion < 6) {
+                Logger.Warn("No change needed.");
+                return;
+            }
+
             using (ServerManager manager = new ServerManager()) {
                 var webProjectDirectory = context.GetWebProjectDirectory();
                 var site = manager.Sites.SingleOrDefault(s => s.Applications.Any(app => app.VirtualDirectories.Any(dir => dir.PhysicalPath == webProjectDirectory)));
@@ -32,6 +38,7 @@ namespace Wia.Tasks {
             var episerverFrameworkFile = Directory.EnumerateFiles(context.GetWebProjectDirectory(), "EPiServerFramework.config", SearchOption.AllDirectories).FirstOrDefault();
 
             if (episerverFrameworkFile == null) {
+                Logger.Error("Could not find an EPiServerFramework.config file.");
                 return;
             }
 
