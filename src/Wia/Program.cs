@@ -173,7 +173,7 @@ namespace Wia {
                 Logger.Error("Installation failed.");
             }
             else {
-                Logger.Success("Installation finished successfully (and URL has been put in clipboard)");
+                Logger.Success("Installation finished successfully (and URL has been copied to clipboard)");
                 Clipboard.SetText(context.ProjectUrl);
             }
         }
