@@ -48,4 +48,7 @@ WIA will always check first if it needs to run the task. This means you can run 
 
 - Investigate how much work it is to support EPiServer Commerce projects.
 
+### Change log
 
+    v1.0.0    2013-03-12    First release
+    
