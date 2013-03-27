@@ -46,26 +46,30 @@ namespace Wia.Resolver {
 
             string webProjectName = context.WebProjectName;
             if (string.IsNullOrWhiteSpace(webProjectName)) {
-                var webDirectories = Directory.EnumerateDirectories(context.CurrentDirectory)
-                                              .Where(dir => Path.GetFileName(dir).Contains("Web", StringComparison.OrdinalIgnoreCase))
-                                              .ToList();
-
-                if (!webDirectories.Any()) {
-                    context.ExitAtNextCheck = true;
-                    Console.WriteLine("Web project could not be resolved. Please specifiy using \"--webproject Project.Web\". \n");
-                    return null;
+                if (Directory.GetFiles(context.CurrentDirectory).Any(item => item.ToLower().EndsWith("\\web.config"))) {
+                    webProjectName = ".";
                 }
+                else{
+                    var webDirectories = Directory.EnumerateDirectories(context.CurrentDirectory)
+                                                  .Where(dir => Path.GetFileName(dir).Contains("Web", StringComparison.OrdinalIgnoreCase))
+                                                  .ToList();
 
-                if (webDirectories.Count > 1) {
-                    context.ExitAtNextCheck = true;
-                    Console.WriteLine("You need to specificy which web project to use: \n--webproject " +
-                        webDirectories.Select(path => Path.GetFileName(path)).Aggregate((a, b) => a + "\n--webproject " + b) + "\n");
-                    return null;
+                    if (!webDirectories.Any()) {
+                        context.ExitAtNextCheck = true;
+                        Console.WriteLine("Web project could not be resolved. Please specifiy using \"--webproject Project.Web\". \n");
+                        return null;
+                    }
+
+                    if (webDirectories.Count > 1) {
+                        context.ExitAtNextCheck = true;
+                        Console.WriteLine("You need to specificy which web project to use: \n--webproject " +
+                            webDirectories.Select(path => Path.GetFileName(path)).Aggregate((a, b) => a + "\n--webproject " + b) + "\n");
+                        return null;
+                    }
+
+                    webProjectName = Path.GetFileName(webDirectories.FirstOrDefault());
                 }
-
-                webProjectName = Path.GetFileName(webDirectories.FirstOrDefault());
             }
-
             var projectDirectory = Path.Combine(context.CurrentDirectory, webProjectName);
 
             if (!Directory.Exists(projectDirectory)) {
