@@ -45,7 +45,11 @@ namespace Wia.Commands {
         public bool ExitAtNextCheck { get; set; }
         
         public string GetWebProjectDirectory() {
-            return Path.Combine(CurrentDirectory, WebProjectName);
+						if(WebProjectName==".") {
+              return CurrentDirectory;
+						} else {
+							return Path.Combine(CurrentDirectory, WebProjectName);
+						}
         }
 
         public bool HasAdministratorPrivileges() {
