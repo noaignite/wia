@@ -31,7 +31,7 @@ namespace Wia.Tasks {
                 appPool.ManagedPipelineMode = context.AppPoolMode == AppPoolMode.Integrated
                                                ? ManagedPipelineMode.Integrated
                                                : ManagedPipelineMode.Classic;
-                
+								appPool.ProcessModel.PingingEnabled = false;
                 if (!string.IsNullOrEmpty(Config.Instance.AppPoolUsername)) {
                     Logger.Log("Setting AppPool identity...");
 
