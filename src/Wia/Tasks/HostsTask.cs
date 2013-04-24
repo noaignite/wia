@@ -40,7 +40,7 @@ namespace Wia.Tasks {
                     string prefix = "";
                     
                     if (!string.IsNullOrWhiteSpace(hostLines.Last()))
-                        prefix = "\n";
+                        prefix = Environment.NewLine;
 
                     sw.Write("{1}127.0.0.1\t\t{0}", host, prefix);
                 }
