@@ -15,11 +15,7 @@ namespace Wia.Tasks {
         public void Execute(WebsiteContext context) {
             using (ServerManager manager = new ServerManager()) {
                 var webProjectDirectory = context.GetWebProjectDirectory();
-                var siteAlreadyExists =
-                    manager.Sites.Any(
-                        s =>
-                        s.Applications.Any(
-                            app => app.VirtualDirectories.Any(dir => dir.PhysicalPath == webProjectDirectory)));
+                var siteAlreadyExists = manager.Sites.Any(s => s.Applications.Any(app => app.VirtualDirectories.Any(dir => dir.PhysicalPath == webProjectDirectory)));
 
                 if (siteAlreadyExists) {
                     Logger.Warn("Site already exists in IIS.");
@@ -32,7 +28,7 @@ namespace Wia.Tasks {
                 // Create appool with project name
                 var appPool = manager.ApplicationPools.Add(name);
                 appPool.ManagedRuntimeVersion = GetFrameworkVersion(context);
-                //appPool.AutoStart = true;
+
                 appPool.ProcessModel.PingingEnabled = false;
                 appPool.Enable32BitAppOnWin64 = context.Enable32Bit;
                 appPool.ManagedPipelineMode = context.AppPoolMode == AppPoolMode.Integrated
