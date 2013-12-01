@@ -9,8 +9,10 @@ using Wia.Model;
 using Wia.Utility;
 
 namespace Wia.Tasks {
-    class HostsTask : ITask {
-        public IEnumerable<Type> DependsUpon() { return new[] {typeof (EpiFrameworkUpdateTask)}; }
+    internal class HostsTask : ITask {
+        public IEnumerable<Type> DependsUpon() {
+            return new[] {typeof (EpiFrameworkUpdateTask)};
+        }
 
         public void Execute(WebsiteContext context) {
             if (context.SkipHosts) {
@@ -30,7 +32,7 @@ namespace Wia.Tasks {
 
                 var hostLines = File.ReadAllLines(hostsPath);
                 var hostAlreadyAdded = hostLines.Any(h => h.Contains(host));
-                
+
                 if (hostAlreadyAdded) {
                     Logger.Warn("No change needed.");
                     return;
@@ -38,7 +40,7 @@ namespace Wia.Tasks {
 
                 using (StreamWriter sw = File.AppendText(hostsPath)) {
                     string prefix = "";
-                    
+
                     if (!string.IsNullOrWhiteSpace(hostLines.Last()))
                         prefix = Environment.NewLine;
 
@@ -46,14 +48,14 @@ namespace Wia.Tasks {
                 }
                 Logger.Success("Successfully added HOSTS entry.");
             }
-            catch (Exception ex)
-			{
+            catch (Exception ex) {
                 Logger.Error("Failed to add HOSTS entry. " + ex);
-			}
+            }
         }
 
         private const int ADMIN_REQUEST_CANCELED_BY_USER_ERROR_CODE = 1223;
-        const string ADD_HOSTS_ENTRY_FORMAT = @"echo. & echo {0}    {1} >> %systemdrive%\windows\system32\drivers\etc\hosts";
+
+        private const string ADD_HOSTS_ENTRY_FORMAT = @"echo. & echo {0}    {1} >> %systemdrive%\windows\system32\drivers\etc\hosts";
 
         private void AddHostsInOtherProcess(string host) {
             try {
@@ -67,7 +69,7 @@ namespace Wia.Tasks {
                     Arguments = string.Format("cmd /K \"{0} & exit\"", addHostsCommand),
                 };
 
-                Process p = new Process { StartInfo = startInfo };
+                Process p = new Process {StartInfo = startInfo};
                 p.Start();
 
                 Logger.Log("Successfully added HOSTS entry.");

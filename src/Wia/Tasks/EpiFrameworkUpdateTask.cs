@@ -9,9 +9,9 @@ using Wia.Model;
 using Wia.Utility;
 
 namespace Wia.Tasks {
-    class EpiFrameworkUpdateTask : ITask {
+    internal class EpiFrameworkUpdateTask : ITask {
         public IEnumerable<Type> DependsUpon() {
-            return new[] { typeof(WebserverTask) };
+            return new[] {typeof (WebserverTask)};
         }
 
         public void Execute(WebsiteContext context) {
@@ -87,6 +87,5 @@ namespace Wia.Tasks {
         private FileAttributes SetAttribute(FileAttributes fileAttributes, FileAttributes attributeToSet) {
             return fileAttributes | attributeToSet;
         }
-
     }
 }

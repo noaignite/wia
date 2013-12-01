@@ -6,9 +6,9 @@ using Wia.Model;
 using Wia.Utility;
 
 namespace Wia.Tasks {
-    class PingSiteTask : ITask {
+    internal class PingSiteTask : ITask {
         public IEnumerable<Type> DependsUpon() {
-            return new[] { typeof(LicenseCopyTask) };
+            return new[] {typeof (LicenseCopyTask)};
         }
 
         public void Execute(WebsiteContext context) {

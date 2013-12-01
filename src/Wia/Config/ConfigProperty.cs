@@ -1,6 +1,7 @@
 ﻿namespace Wia {
     public class ConfigProperty {
-        public ConfigProperty() { }
+        public ConfigProperty() {}
+
         public ConfigProperty(string key, string value, string helpText) {
             Key = key;
             Value = value;

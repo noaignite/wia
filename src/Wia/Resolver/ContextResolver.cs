@@ -49,7 +49,7 @@ namespace Wia.Resolver {
                 if (Directory.GetFiles(context.CurrentDirectory).Any(item => item.ToLower().EndsWith("\\web.config"))) {
                     webProjectName = ".";
                 }
-                else{
+                else {
                     var webDirectories = Directory.EnumerateDirectories(context.CurrentDirectory)
                                                   .Where(dir => Path.GetFileName(dir).Contains("Web", StringComparison.OrdinalIgnoreCase))
                                                   .ToList();
@@ -63,7 +63,7 @@ namespace Wia.Resolver {
                     if (webDirectories.Count > 1) {
                         context.ExitAtNextCheck = true;
                         Console.WriteLine("You need to specificy which web project to use: \n--webproject " +
-                            webDirectories.Select(path => Path.GetFileName(path)).Aggregate((a, b) => a + "\n--webproject " + b) + "\n");
+                                          webDirectories.Select(path => Path.GetFileName(path)).Aggregate((a, b) => a + "\n--webproject " + b) + "\n");
                         return null;
                     }
 
@@ -95,8 +95,7 @@ namespace Wia.Resolver {
             }
 
             var webProjectFolderPath = context.GetWebProjectDirectory();
-            var episerverConfigPath = Directory.GetFiles(webProjectFolderPath, "episerver.config", SearchOption.AllDirectories)
-                                               .FirstOrDefault();
+            var episerverConfigPath = Directory.GetFiles(webProjectFolderPath, "episerver.config", SearchOption.AllDirectories).FirstOrDefault();
 
             if (!File.Exists(episerverConfigPath)) {
                 // the episerver config section might be in web.config
@@ -142,7 +141,8 @@ namespace Wia.Resolver {
             }
 
             var doc = XDocument.Load(webProjectFilePath);
-            var targetFrameworkVersion = doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "TargetFrameworkVersion");
+            var targetFrameworkVersion =
+                doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "TargetFrameworkVersion");
 
             if (targetFrameworkVersion == null) {
                 context.ExitAtNextCheck = true;
@@ -170,8 +170,7 @@ namespace Wia.Resolver {
             if (context.EpiserverVersion > 0)
                 return context.EpiserverVersion;
 
-            var episerverDllFilePath = Directory.EnumerateFiles(context.CurrentDirectory, "EPiServer.dll", SearchOption.AllDirectories)
-                                                .FirstOrDefault();
+            var episerverDllFilePath = Directory.EnumerateFiles(context.CurrentDirectory, "EPiServer.dll", SearchOption.AllDirectories).FirstOrDefault();
 
             if (episerverDllFilePath != null) {
                 var version = FileVersionInfo.GetVersionInfo(episerverDllFilePath);

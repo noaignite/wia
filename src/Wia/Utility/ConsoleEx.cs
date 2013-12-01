@@ -11,7 +11,7 @@ namespace Wia.Utility {
         /// <returns>the string the user typed in </returns>
         public static string ReadPassword(char mask) {
             const int ENTER = 13, BACKSP = 8, CTRLBACKSP = 127;
-            int[] filtered = { 0, 27, 9, 10 /*, 32 space, if you care */ }; // const
+            int[] filtered = {0, 27, 9, 10 /*, 32 space, if you care */}; // const
 
             var pass = new Stack<char>();
             char chr;
@@ -29,7 +29,7 @@ namespace Wia.Utility {
                         pass.Pop();
                     }
                 }
-                else if (filtered.Count(x => chr == x) > 0) { }
+                else if (filtered.Count(x => chr == x) > 0) {}
                 else {
                     pass.Push(chr);
                     Console.Write(mask);
@@ -48,6 +48,5 @@ namespace Wia.Utility {
         public static string ReadPassword() {
             return ReadPassword('*');
         }
-
     }
 }

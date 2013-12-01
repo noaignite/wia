@@ -33,7 +33,7 @@ namespace Wia.Utility {
         private readonly Regex _sectionRegex = new Regex(@"(?<=\[)(?<SectionName>[^\]]+)(?=\])");
         private readonly Regex _keyValueRegex = new Regex(@"(?<Key>[^=]+)=(?<Value>.+)");
 
-        public IniFileManager() : this(null) { }
+        public IniFileManager() : this(null) {}
 
         public IniFileManager(string filename) {
             _iniFileContent = new Dictionary<string, Dictionary<string, string>>();
@@ -60,7 +60,8 @@ namespace Wia.Utility {
         /// <param name="key"></param>
         /// <param name="value"></param>
         public void SetValue(string sectionName, string key, string value) {
-            if (!_iniFileContent.ContainsKey(sectionName)) _iniFileContent[sectionName] = new Dictionary<string, string>();
+            if (!_iniFileContent.ContainsKey(sectionName))
+                _iniFileContent[sectionName] = new Dictionary<string, string>();
             _iniFileContent[sectionName][key] = value;
         }
 
@@ -126,7 +127,6 @@ namespace Wia.Utility {
                 catch {
                     return false;
                 }
-
             }
             else {
                 return false;

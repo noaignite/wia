@@ -7,7 +7,7 @@ namespace Wia.Commands {
 
         [ValueOption(0)]
         public string ConfigKey { get; set; }
-        
+
         [ValueOption(1)]
         public string ConfigValue { get; set; }
     }

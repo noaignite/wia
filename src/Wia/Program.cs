@@ -17,7 +17,7 @@ namespace Wia {
             var prevColor = Console.ForegroundColor;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
             Console.ForegroundColor = ConsoleColor.White;
-            
+
             string invokedVerb = null;
             object invokedVerbOptions = null;
 
@@ -34,10 +34,10 @@ namespace Wia {
 
             switch (invokedVerb) {
                 case "install":
-                    InitiateInstallTask((WebsiteContext)invokedVerbOptions);
+                    InitiateInstallTask((WebsiteContext) invokedVerbOptions);
                     break;
                 case "config":
-                    InitiateConfigTask((ConfigOptions)invokedVerbOptions);
+                    InitiateConfigTask((ConfigOptions) invokedVerbOptions);
                     break;
             }
 
@@ -179,7 +179,7 @@ namespace Wia {
         }
 
         private static IEnumerable<ITask> GetTasksInAssembly() {
-            var type = typeof(ITask);
+            var type = typeof (ITask);
             var tasks = AppDomain.CurrentDomain.GetAssemblies().ToList()
                                  .SelectMany(s => s.GetTypes())
                                  .Where(t => type.IsAssignableFrom(t) && t.IsClass)

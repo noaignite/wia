@@ -7,7 +7,7 @@ using Wia.Utility;
 
 namespace Wia.Tasks {
     public class LicenseCopyTask : ITask {
-        const string LICENSE_FILENAME = "License.config";
+        private const string LICENSE_FILENAME = "License.config";
 
         public IEnumerable<Type> DependsUpon() {
             return new[] {typeof (HostsTask)};
