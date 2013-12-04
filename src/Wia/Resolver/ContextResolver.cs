@@ -51,7 +51,7 @@ namespace Wia.Resolver {
                 }
                 else {
                     var webDirectories = Directory.EnumerateDirectories(context.CurrentDirectory)
-                                                  .Where(dir => Path.GetFileName(dir).Contains("Web", StringComparison.OrdinalIgnoreCase))
+												  .Where(dir => Path.GetFileName(dir).Contains("Web", StringComparison.OrdinalIgnoreCase))
                                                   .ToList();
 
                     if (!webDirectories.Any()) {
@@ -104,7 +104,7 @@ namespace Wia.Resolver {
                 if (!File.Exists(webConfigPath)) {
                     // serious trouble if this file can not be found.
                     context.ExitAtNextCheck = true;
-                    Console.WriteLine("The web.config file could not be found in " + webProjectFolderPath);
+                    Console.WriteLine("The web.config file could not be found at " + webProjectFolderPath);
                     return null;
                 }
 
@@ -170,14 +170,28 @@ namespace Wia.Resolver {
             if (context.EpiserverVersion > 0)
                 return context.EpiserverVersion;
 
+			// try to find an episerver .dll
             var episerverDllFilePath = Directory.EnumerateFiles(context.CurrentDirectory, "EPiServer.dll", SearchOption.AllDirectories).FirstOrDefault();
+	        var packagesConfigPath = Path.Combine(context.GetWebProjectDirectory(), "packages.config");
 
             if (episerverDllFilePath != null) {
                 var version = FileVersionInfo.GetVersionInfo(episerverDllFilePath);
                 return version.FileMajorPart;
             }
+            
+			// look in the package.config file for episerver
+			if (File.Exists(packagesConfigPath)) {
+	            var doc = XDocument.Load(packagesConfigPath);
+				var episerverPackage = doc.Descendants("package").FirstOrDefault(x => x.Attribute("id").Value == "EPiServer.CMS.Core");
+				
+				if (episerverPackage != null) {
+					var versionString = episerverPackage.Attribute("version").Value;
+					var version = Version.Parse(versionString);
+					return version.Major;
+				}
+			}
 
-            return -1;
+	        return -1;
         }
     }
 }
