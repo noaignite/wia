@@ -107,7 +107,7 @@ namespace Wia {
         private static void InitiateInstallTask(WebsiteContext context) {
             ContextResolver.ResolveContextDetails(context);
 
-            if (context.ExitAtNextCheck)
+            if (context.ExitAtNextCheck && !context.RunTasks.Any())
                 return;
 
             Console.WriteLine("\nConfiguration:");
@@ -116,7 +116,9 @@ namespace Wia {
             if (!context.HasAdministratorPrivileges()) {
                 Logger.Space();
                 Logger.Warn("WIA needs to run with administrator privileges to modify IIS and HOSTS-file.\nOpen new command prompt with \"Run as administrator\" and try again.");
-                return;
+                
+				if (!context.Force)
+					return;
             }
 
             if (context.Force) {
@@ -135,7 +137,7 @@ namespace Wia {
         private static void DisplayContext(WebsiteContext context) {
             Logger.TabIndention = 1;
 
-            string[] ignoreProps = { "CurrentDirectory", "ExitAtNextCheck", "AppPoolIdentityVerb", "Force", "SkipHosts", "SkipTasks" };
+            string[] ignoreProps = { "CurrentDirectory", "ExitAtNextCheck", "AppPoolIdentityVerb", "Force", "SkipHosts", "SkipTasks", "RunTasks" };
             foreach (var prop in context.GetType().GetProperties()) {
                 if (!ignoreProps.Contains(prop.Name)) {
                     Logger.Log("{0} = {1}", prop.Name, prop.GetValue(context, null));
@@ -155,6 +157,9 @@ namespace Wia {
 
                 if (context.SkipTasks.Any(t => t.Equals(taskName, StringComparison.OrdinalIgnoreCase)))
                     continue;
+
+				if (context.RunTasks.Any() && !context.RunTasks.Any(t => t.Equals(taskName, StringComparison.OrdinalIgnoreCase)))
+					continue;
 
                 Logger.Log(taskName + ":");
 

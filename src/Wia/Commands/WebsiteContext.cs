@@ -7,6 +7,7 @@ namespace Wia.Commands {
     public class WebsiteContext {
         public WebsiteContext() {
             SkipTasks = new string[] {};
+            RunTasks = new string[] {};
         }
 
         [Option('d', "directory", HelpText = "Root project directory where solution file exists.")]
@@ -38,6 +39,9 @@ namespace Wia.Commands {
 
         [OptionArray("skip", HelpText = "List of tasks to skip running (space separated).")]
         public string[] SkipTasks { get; set; }
+
+        [OptionArray("tasks", HelpText = "List of tasks to run (space separated).")]
+        public string[] RunTasks { get; set; }
 
         [Option('f', "force", HelpText = "Do not prompt to confirm configuration.", DefaultValue = false)]
         public bool Force { get; set; }
