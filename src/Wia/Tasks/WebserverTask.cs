@@ -13,6 +13,11 @@ namespace Wia.Tasks {
         }
 
         public void Execute(WebsiteContext context) {
+			if (!context.HasAdministratorPrivileges()) {
+				Logger.Error("Could not execute Webserver task without administrator rights.");
+				return;
+			}
+
             using (ServerManager manager = new ServerManager()) {
                 var webProjectDirectory = context.GetWebProjectDirectory();
                 var siteAlreadyExists = manager.Sites.Any(s => s.Applications.Any(app => app.VirtualDirectories.Any(dir => dir.PhysicalPath == webProjectDirectory)));

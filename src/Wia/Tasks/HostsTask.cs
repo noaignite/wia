@@ -38,6 +38,11 @@ namespace Wia.Tasks {
                     return;
                 }
 
+				if (!context.HasAdministratorPrivileges()) {
+					Logger.Error("Could not execute Hosts task without administrator rights.");
+					return;
+				}
+
                 using (StreamWriter sw = File.AppendText(hostsPath)) {
                     string prefix = "";
 
