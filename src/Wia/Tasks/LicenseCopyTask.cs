@@ -41,7 +41,7 @@ namespace Wia.Tasks {
                     return;
                 }
 
-                File.Copy(licenseFileNeeded, licensePath);
+                File.Copy(licenseFileNeeded, licensePath, true);
             }
             catch (Exception ex) {
                 Logger.Error("Failed to copy license file to website: " + ex.Message);
