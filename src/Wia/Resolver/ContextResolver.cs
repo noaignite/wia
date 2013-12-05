@@ -141,8 +141,7 @@ namespace Wia.Resolver {
             }
 
             var doc = XDocument.Load(webProjectFilePath);
-            var targetFrameworkVersion =
-                doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "TargetFrameworkVersion");
+            var targetFrameworkVersion = doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "TargetFrameworkVersion");
 
             if (targetFrameworkVersion == null) {
                 context.ExitAtNextCheck = true;
