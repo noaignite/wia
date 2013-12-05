@@ -18,7 +18,7 @@ namespace Wia.Tasks {
             var webProjectPath = context.GetWebProjectDirectory();
             var licensePath = Path.Combine(webProjectPath, LICENSE_FILENAME);
 
-            if (File.Exists(licensePath)) {
+            if (File.Exists(licensePath) && !context.Force) {
                 Logger.Warn("License file already exists.");
                 return;
             }
