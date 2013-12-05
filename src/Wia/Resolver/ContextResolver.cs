@@ -46,7 +46,7 @@ namespace Wia.Resolver {
 
             string webProjectName = context.WebProjectName;
             if (string.IsNullOrWhiteSpace(webProjectName)) {
-                if (Directory.GetFiles(context.CurrentDirectory).Any(item => item.ToLower().EndsWith("\\web.config"))) {
+                if (Directory.EnumerateFiles(context.CurrentDirectory).Any(item => item.EndsWith("\\web.config", true, null))) {
                     webProjectName = ".";
                 }
                 else {
@@ -63,7 +63,7 @@ namespace Wia.Resolver {
                     if (webDirectories.Count > 1) {
                         context.ExitAtNextCheck = true;
                         Console.WriteLine("You need to specificy which web project to use: \n--webproject " +
-                                          webDirectories.Select(path => Path.GetFileName(path)).Aggregate((a, b) => a + "\n--webproject " + b) + "\n");
+                                          webDirectories.Select(Path.GetFileName).Aggregate((a, b) => a + "\n--webproject " + b) + "\n");
                         return null;
                     }
 
