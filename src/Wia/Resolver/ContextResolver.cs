@@ -56,7 +56,7 @@ namespace Wia.Resolver {
 
                     if (!webDirectories.Any()) {
                         context.ExitAtNextCheck = true;
-                        Console.WriteLine("Web project could not be resolved. Please specifiy using \"--webproject Project.Web\". \n");
+                        Console.WriteLine("Web project could not be resolved. Please specify using \"--webproject Project.Web\". \n");
                         return null;
                     }
 
@@ -81,6 +81,11 @@ namespace Wia.Resolver {
             return webProjectName;
         }
 
+        /// <summary>
+        /// Tries to find the Project Url from 1. ".csproj" file. 2. the episerver.config. 3. web.config.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private static string GetProjectUrl(WebsiteContext context) {
             if (context.ExitAtNextCheck)
                 return null;
@@ -95,6 +100,18 @@ namespace Wia.Resolver {
             }
 
             var webProjectFolderPath = context.GetWebProjectDirectory();
+
+            var webProjectFilePath = Directory.EnumerateFiles(context.GetWebProjectDirectory(), "*.csproj").FirstOrDefault();
+
+            var doc = XDocument.Load(webProjectFilePath);
+            var customServerUrl = doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "CustomServerUrl");
+
+            if (customServerUrl != null)
+            {
+                projectUrl = customServerUrl.Value;
+                return projectUrl;
+            }
+            
             var episerverConfigPath = Directory.GetFiles(webProjectFolderPath, "episerver.config", SearchOption.AllDirectories).FirstOrDefault();
 
             if (!File.Exists(episerverConfigPath)) {
@@ -111,7 +128,7 @@ namespace Wia.Resolver {
                 episerverConfigPath = webConfigPath;
             }
 
-            var doc = XDocument.Load(episerverConfigPath);
+            doc = XDocument.Load(episerverConfigPath);
             var siteSettings = doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "siteSettings");
 
             if (siteSettings == null) {
