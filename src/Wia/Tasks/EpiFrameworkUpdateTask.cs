@@ -43,8 +43,14 @@ namespace Wia.Tasks {
             }
 
             var doc = XDocument.Load(episerverFrameworkFile);
-            var automaticSiteMappingElement = doc.Descendants("automaticSiteMapping").FirstOrDefault();
             var key = string.Format("/LM/W3SVC/{0}/ROOT:{1}", siteId, Environment.MachineName);
+            var automaticSiteMappingElement = doc.Descendants("automaticSiteMapping").FirstOrDefault();
+
+            if (automaticSiteMappingElement == null)
+            {
+                Logger.Warn("AutomaticSiteMapping element could not be found in EPiServerFramework.config");
+                return;
+            }
 
             var alreadyUpdated = automaticSiteMappingElement.Descendants().Any(element => element.Attribute("key").Value.Equals(key));
 
