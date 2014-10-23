@@ -22,7 +22,7 @@ WIA will always check first if it needs to run the task. This means you can run 
 
 ### Install procedure
 
-1. Download the [latest version of WIA](http://www.nansen.com/files/wia/wia-1.0.0.zip "Download the latest version of WIA") (zip).
+1. Download the [latest version of WIA](https://github.com/nansen/wia/releases "Download the latest version of WIA") (zip).
 2. Unpack the wia.exe file to a folder where you keep command tools.   
 *If you do not have such folder:*
 	1. Create a new folder at e.g.`C:\Tools`.
@@ -40,7 +40,7 @@ WIA will always check first if it needs to run the task. This means you can run 
 
 ### Support
 
-- EPiServer CMS 5-7
+- EPiServer CMS 5-7.5
 - IIS 7 and later
 
 
@@ -50,5 +50,4 @@ WIA will always check first if it needs to run the task. This means you can run 
 
 ### Change log
 
-    v1.0.0    2013-03-12    First release
-    
+See [Releases](https://github.com/nansen/wia/releases) for change log.
